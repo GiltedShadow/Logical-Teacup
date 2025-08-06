@@ -1,0 +1,233 @@
+WARNING:root:UserPresets.csv created, file not found or first time running software
+WARNING:root:plantList.csv created, file not found or first time running software
+INFO:root:UserPresets.csv found
+INFO:root:plantList.csv found
+INFO:root:UserPresets.csv found
+INFO:root:plantList.csv found
+INFO:root:UserPresets.csv found
+INFO:root:plantList.csv found
+2025-08-01 19:16:40,533 INFO UserPresets.csv found
+2025-08-01 19:16:40,533 INFO plantList.csv found
+2025-08-01 19:59:54,293 INFO UserPresets.csv found
+2025-08-01 19:59:54,294 INFO plantList.csv found
+2025-08-01 20:00:15,267 INFO UserPresets.csv found
+2025-08-01 20:00:15,267 INFO plantList.csv found
+2025-08-01 20:00:28,496 INFO UserPresets.csv found
+2025-08-01 20:00:28,496 INFO plantList.csv found
+2025-08-01 20:08:23,339 INFO UserPresets.csv found
+2025-08-01 20:08:23,340 INFO plantList.csv found
+2025-08-01 20:08:45,401 INFO UserPresets.csv found
+2025-08-01 20:08:45,401 INFO plantList.csv found
+2025-08-01 20:11:51,100 INFO UserPresets.csv found
+2025-08-01 20:11:51,101 INFO plantList.csv found
+2025-08-01 20:17:53,192 INFO UserPresets.csv found
+2025-08-01 20:17:53,193 INFO plantList.csv found
+2025-08-01 20:25:05,244 INFO starting program
+2025-08-01 20:27:39,471 INFO UserPresets.csv found
+2025-08-01 20:27:39,471 INFO plantList.csv found
+2025-08-01 20:30:22,206 INFO starting program
+2025-08-01 20:30:41,158 INFO starting program
+2025-08-01 20:32:30,681 INFO starting program
+2025-08-01 20:32:52,130 INFO UserPresets.csv found
+2025-08-01 20:32:52,130 INFO plantList.csv found
+2025-08-01 20:33:43,423 INFO starting program
+2025-08-01 20:33:55,529 INFO starting program
+2025-08-01 20:34:09,854 INFO starting program
+2025-08-01 20:35:21,191 INFO starting program
+2025-08-01 20:37:59,165 INFO starting program
+2025-08-01 20:39:01,250 INFO starting program
+2025-08-01 20:42:34,371 INFO starting program
+2025-08-01 20:42:36,254 CRITICAL user closing program
+2025-08-01 20:45:55,716 INFO starting program
+2025-08-01 20:46:23,989 INFO starting program
+2025-08-01 20:58:34,388 INFO starting program
+2025-08-01 20:59:22,057 INFO starting program
+2025-08-01 21:00:10,562 INFO starting program
+2025-08-01 21:00:36,970 INFO starting program
+2025-08-01 21:01:19,703 INFO starting program
+2025-08-01 21:01:42,326 INFO starting program
+2025-08-01 21:01:59,700 INFO starting program
+2025-08-01 21:03:35,206 INFO starting program
+2025-08-01 21:05:52,549 INFO starting program
+2025-08-01 21:06:24,405 INFO starting program
+2025-08-01 21:07:16,000 INFO starting program
+2025-08-01 21:08:42,302 INFO starting program
+2025-08-01 21:10:00,086 INFO starting program
+2025-08-01 21:12:50,987 INFO starting program
+2025-08-01 21:12:52,732 WARNING empty file found for user preferences
+2025-08-01 21:14:11,452 INFO starting program
+2025-08-01 21:14:13,255 INFO user preferences successfully read
+2025-08-01 21:14:13,255 WARNING empty file found for user preferences
+2025-08-01 21:15:16,831 INFO starting program
+2025-08-01 21:15:19,545 INFO user preferences successfully read
+2025-08-01 21:15:39,786 DEBUG ['', '', '', '', '']
+2025-08-01 21:15:42,683 INFO user closing program
+2025-08-01 21:16:23,760 INFO starting program
+2025-08-01 21:16:25,642 INFO user preferences successfully read
+2025-08-01 21:17:09,734 INFO starting program
+2025-08-01 21:17:11,816 INFO user preferences successfully read
+2025-08-01 21:17:16,559 INFO starting program
+2025-08-01 21:17:23,404 INFO starting program
+2025-08-01 21:17:25,175 INFO user preferences successfully read
+2025-08-01 21:17:52,123 INFO starting program
+2025-08-01 21:17:57,225 INFO user preferences successfully read
+2025-08-01 21:17:57,225 WARNING empty file found for user preferences
+2025-08-01 21:18:06,118 DEBUG ['alex', 'auto', 'auto', 'glass', 'wood']
+2025-08-01 21:18:09,134 INFO user closing program
+2025-08-01 21:24:11,593 INFO starting program
+2025-08-01 21:24:21,624 INFO user preferences successfully read
+2025-08-01 21:24:21,624 WARNING empty file found for user preferences
+2025-08-01 21:24:38,121 INFO starting program
+2025-08-01 21:24:41,740 INFO user preferences successfully read
+2025-08-01 21:24:41,740 WARNING empty file found for user preferences
+2025-08-01 21:24:59,630 INFO starting program
+2025-08-01 21:25:21,215 INFO starting program
+2025-08-01 21:25:25,972 INFO user preferences successfully read
+2025-08-01 21:25:25,973 WARNING empty file found for user preferences
+2025-08-01 21:26:11,995 INFO starting program
+2025-08-01 21:30:46,805 INFO starting program
+2025-08-01 21:30:49,045 WARNING user preferences file not found, attempting to create/ find both files
+2025-08-01 21:30:49,045 WARNING UserPresets.csv created, file not found or first time running software
+2025-08-01 21:30:49,045 INFO plantList.csv found
+2025-08-01 21:34:42,390 INFO starting program
+2025-08-01 21:34:45,334 WARNING user preferences file not found, attempting to create/ find both files
+2025-08-01 21:34:45,334 WARNING UserPresets.csv created, file not found or first time running software
+2025-08-01 21:34:45,334 INFO plantList.csv found
+2025-08-01 21:35:06,141 DEBUG ['alex', 'auto', 'auto', 'glass', 'wood']
+2025-08-01 21:35:09,841 INFO user preferences successfully read
+2025-08-01 21:35:59,225 INFO starting program
+2025-08-01 21:36:01,338 INFO user preferences successfully read
+2025-08-01 21:36:01,338 ERROR <class 'Exception'> found when attempting to read user presets file
+2025-08-01 21:37:07,876 INFO starting program
+2025-08-01 21:37:12,045 INFO user preferences successfully read
+2025-08-01 21:37:12,045 ERROR <class 'Exception'> found when attempting to read user presets file
+2025-08-01 21:37:30,028 INFO starting program
+2025-08-01 21:37:32,130 INFO user preferences successfully read
+2025-08-01 21:40:09,289 INFO starting program
+2025-08-01 21:40:11,780 INFO user preferences successfully read
+2025-08-01 21:43:37,665 INFO starting program
+2025-08-01 21:43:44,090 INFO user preferences successfully read
+2025-08-01 21:44:03,779 INFO starting program
+2025-08-01 21:44:06,286 INFO user preferences successfully read
+2025-08-02 18:28:43,879 INFO starting program
+2025-08-02 18:28:43,879 INFO UserPresets.csv found
+2025-08-02 18:28:43,879 INFO plantList.csv found
+2025-08-02 18:29:22,577 INFO starting program
+2025-08-02 18:29:22,578 INFO UserPresets.csv found
+2025-08-02 18:29:22,578 INFO plantList.csv found
+2025-08-02 21:22:11,483 INFO starting program
+2025-08-02 21:22:11,483 INFO UserPresets.csv found
+2025-08-02 21:22:11,483 INFO plantList.csv found
+2025-08-02 21:23:00,831 INFO starting program
+2025-08-02 21:23:00,831 INFO UserPresets.csv found
+2025-08-02 21:23:00,831 INFO plantList.csv found
+2025-08-02 21:23:05,976 INFO user preferences successfully read
+2025-08-02 21:23:05,977 WARNING empty file found for plants list
+2025-08-02 21:49:23,587 INFO starting program
+2025-08-02 21:49:23,587 WARNING UserPresets.csv created, file not found or first time running software
+2025-08-02 21:49:23,588 WARNING plantList.csv created, file not found or first time running software
+2025-08-02 21:52:01,677 INFO starting program
+2025-08-02 21:52:01,677 INFO UserPresets.csv found
+2025-08-02 21:52:01,677 INFO plantList.csv found
+2025-08-02 21:52:45,106 INFO starting program
+2025-08-02 21:52:45,107 INFO UserPresets.csv found
+2025-08-02 21:52:45,107 INFO plantList.csv found
+2025-08-02 21:52:49,602 INFO user preferences successfully read
+2025-08-02 21:52:49,603 WARNING empty file found for user preferences
+2025-08-02 21:53:34,225 INFO starting program
+2025-08-02 21:53:34,225 INFO UserPresets.csv found
+2025-08-02 21:53:34,225 INFO plantList.csv found
+2025-08-02 21:53:36,798 INFO user preferences successfully read
+2025-08-02 21:53:36,798 WARNING completely empty file found for user preferences
+2025-08-02 21:54:28,196 INFO starting program
+2025-08-02 21:54:28,196 INFO UserPresets.csv found
+2025-08-02 21:54:28,196 INFO plantList.csv found
+2025-08-02 21:54:30,461 INFO user preferences successfully read
+2025-08-02 21:54:30,462 WARNING completely empty file found for user preferences
+2025-08-02 21:55:08,851 INFO starting program
+2025-08-02 21:55:08,851 INFO UserPresets.csv found
+2025-08-02 21:55:08,852 INFO plantList.csv found
+2025-08-02 21:55:12,516 INFO user preferences successfully read
+2025-08-02 21:55:28,232 INFO starting program
+2025-08-02 21:55:28,232 INFO UserPresets.csv found
+2025-08-02 21:55:28,233 INFO plantList.csv found
+2025-08-02 21:55:30,481 INFO user preferences successfully read
+2025-08-02 21:55:30,481 WARNING completely empty file found for user preferences
+2025-08-02 21:56:27,330 DEBUG ['alexi', 'auto', 'auto', 'glass', 'wood']
+2025-08-02 21:56:30,413 INFO user preferences successfully read
+2025-08-02 21:56:38,871 INFO user closing program
+2025-08-02 21:56:42,801 INFO starting program
+2025-08-02 21:56:42,801 INFO UserPresets.csv found
+2025-08-02 21:56:42,801 INFO plantList.csv found
+2025-08-02 21:56:46,126 INFO user preferences successfully read
+2025-08-02 21:57:31,546 INFO starting program
+2025-08-02 21:57:31,546 INFO UserPresets.csv found
+2025-08-02 21:57:31,546 INFO plantList.csv found
+2025-08-02 21:57:49,890 INFO starting program
+2025-08-02 21:57:49,890 INFO UserPresets.csv found
+2025-08-02 21:57:49,891 INFO plantList.csv found
+2025-08-02 21:57:52,081 INFO user preferences successfully read
+2025-08-02 21:57:52,081 WARNING completely empty file found for user preferences
+2025-08-02 22:01:34,412 INFO starting program
+2025-08-02 22:01:34,412 INFO UserPresets.csv found
+2025-08-02 22:01:34,412 INFO plantList.csv found
+2025-08-02 22:01:52,328 INFO starting program
+2025-08-02 22:01:52,328 INFO UserPresets.csv found
+2025-08-02 22:01:52,329 INFO plantList.csv found
+2025-08-02 22:02:02,161 INFO starting program
+2025-08-02 22:02:02,162 INFO UserPresets.csv found
+2025-08-02 22:02:02,162 INFO plantList.csv found
+2025-08-02 22:02:30,163 INFO starting program
+2025-08-02 22:02:30,163 INFO UserPresets.csv found
+2025-08-02 22:02:30,163 INFO plantList.csv found
+2025-08-02 22:03:26,134 INFO starting program
+2025-08-02 22:03:26,134 INFO UserPresets.csv found
+2025-08-02 22:03:26,134 INFO plantList.csv found
+2025-08-02 22:03:46,815 INFO starting program
+2025-08-02 22:03:46,816 INFO UserPresets.csv found
+2025-08-02 22:03:46,816 INFO plantList.csv found
+2025-08-02 22:04:11,634 INFO starting program
+2025-08-02 22:04:11,635 INFO UserPresets.csv found
+2025-08-02 22:04:11,635 INFO plantList.csv found
+2025-08-02 22:05:02,552 INFO starting program
+2025-08-02 22:05:02,552 INFO UserPresets.csv found
+2025-08-02 22:05:02,552 INFO plantList.csv found
+2025-08-02 22:10:11,084 INFO starting program
+2025-08-02 22:10:11,084 INFO UserPresets.csv found
+2025-08-02 22:10:11,085 INFO plantList.csv found
+2025-08-02 22:12:57,126 INFO starting program
+2025-08-02 22:12:57,126 INFO UserPresets.csv found
+2025-08-02 22:12:57,127 INFO plantList.csv found
+2025-08-02 22:13:11,781 DEBUG ['Alex', 'auto', 'auto', 'glass', 'wood']
+2025-08-02 22:13:37,776 INFO starting program
+2025-08-02 22:13:37,776 INFO UserPresets.csv found
+2025-08-02 22:13:37,776 INFO plantList.csv found
+2025-08-02 22:14:10,436 INFO starting program
+2025-08-02 22:14:10,436 INFO UserPresets.csv found
+2025-08-02 22:14:10,437 INFO plantList.csv found
+2025-08-02 22:14:21,831 DEBUG ['Alexi', 'auto', 'auto', 'glass', 'wood']
+2025-08-02 22:15:06,594 DEBUG ['Alex', 'manual', 'window vent', 'plastic', 'plastic']
+2025-08-02 22:15:57,784 INFO starting program
+2025-08-02 22:15:57,784 INFO UserPresets.csv found
+2025-08-02 22:15:57,784 INFO plantList.csv found
+2025-08-02 22:16:12,376 DEBUG ['Alexi', 'auto', 'auto', 'glass', 'wood']
+2025-08-02 22:17:01,205 DEBUG ['Alexi', 'auto', 'auto', 'glass', 'wood']
+2025-08-03 14:03:29,699 INFO starting program
+2025-08-03 14:03:29,700 INFO UserPresets.csv found
+2025-08-03 14:03:29,700 INFO plantList.csv found
+2025-08-03 14:15:01,656 INFO starting program
+2025-08-03 14:15:01,656 INFO UserPresets.csv found
+2025-08-03 14:15:01,656 INFO plantList.csv found
+2025-08-03 14:15:39,229 INFO starting program
+2025-08-03 14:15:39,229 INFO UserPresets.csv found
+2025-08-03 14:15:39,229 INFO plantList.csv found
+2025-08-03 14:16:15,742 INFO starting program
+2025-08-03 14:16:15,743 INFO UserPresets.csv found
+2025-08-03 14:16:15,743 INFO plantList.csv found
+2025-08-03 14:16:46,000 INFO starting program
+2025-08-03 14:16:46,000 INFO UserPresets.csv found
+2025-08-03 14:16:46,000 INFO plantList.csv found
+2025-08-03 14:17:50,087 INFO starting program
+2025-08-03 14:17:50,087 INFO UserPresets.csv found
+2025-08-03 14:17:50,087 INFO plantList.csv found
+2025-08-03 14:20:47,313 INFO user closing program
