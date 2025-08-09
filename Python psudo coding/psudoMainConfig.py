@@ -72,10 +72,13 @@ Things that this needs to do:
 # Take into account user input information
 
 # .csv file to start, possible SQL (is SQL needed at all?)
+#-SQL- will be easier to reference specific cells and changes (i think, workaround is to recreate the csv file)
+#DuckDB, SQLite
 
 #######################
 
 import csv
+import sqlite3
 import os
 import logging
 
@@ -83,6 +86,7 @@ fileVersion = 0.1
 
 userPresetsFile = "UserPresets.csv"
 plantsFile = "plantList.csv"
+databaseFile = "test.db"
 
 userFieldnames = ['Name', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
 userReseponses = []
@@ -105,16 +109,18 @@ logging.basicConfig(filename="testLogging.log", level=logging.NOTSET, format=FOR
 #User interface
 def userInterface(userInput):
     match userInput.lower():
-        case 'help':
+        case 'help'|'h':
             return help_text()
-        case 'version':
+        case 'version'|'v':
             return print(fileVersion)
-        case 'file check':
+        case 'file check'|'f':
             return file_check()
-        case 'settings':
+        case 'settings'|'user'|'s':
             return user_settings()
-        case 'plants':
+        case 'plants'|'plant'|'p':
             return plant_settings()
+        case 'admin'|'a':
+            return whoops()
         # case 'add plant':
         #     return whoops()
         case default:
@@ -123,6 +129,7 @@ def userInterface(userInput):
 
 def help_text():
     print("""
+While in any specific area q or quit should allow you to return to the main menu
 help ------- list commands
 version ---- will print out the file version
 file check - will search for files and will create them if not found
@@ -140,7 +147,7 @@ def power_down():
         exit()
 
 def file_check():
-    for file in (userPresetsFile, plantsFile):
+    for file in (userPresetsFile, plantsFile, databaseFile):
         try:
             open(file, "x")
             logging.warning(file + " created and header added, file not found or first time running software")
@@ -158,38 +165,6 @@ def file_check():
             print(file + " found")
 
 def user_settings():
-    # commented out as program will read the file at start and fill out a list
-    ########################################################
-    # try:
-    #     with open(userPresetsFile, 'r', newline='') as csvfile:
-    #         print("csv opened")
-    #         logging.info("user preferences successfully read")
-    #         numRows = 0
-    #         reader = csv.DictReader(csvfile)
-    #         for row in reader:
-    #             print(row)
-    #             if (row==['Name', 'Watering Style', 'Ventilation', 'Panels', 'Frame']):
-    #                 print("Empty file! Lets fill that")
-    #                 #interesting here, this does not pull at all with just the header
-    #                 #not even if the user deletes their settings manually
-    #                 logging.warning("empty file found with just a header for user preferences")
-    #             numRows +=1
-    #         if (numRows == 0):
-    #             print("Empty file! Lets fill that")
-    #             logging.warning("completely empty file found for user preferences")
-    #         else:
-    #             prompt = input("do you want to overwrite these values?  y/n\n>>")
-    #             if (prompt == "n" or prompt =="no"):
-    #                 return
-    # except FileNotFoundError:
-    #     logging.warning("user preferences file not found, attempting to create/ find both files")
-    #     file_check()
-    #     print("Empty file! Lets fill that")
-    # except:
-    #     logging.error(str(Exception) + " found when attempting to read user presets file")
-    #     print(str(Exception) + " found, check log files")
-    #     return
-    ########################################################
     if (userPrefList == []):
         print("Empty file! Lets fill that")
     else:
@@ -199,7 +174,7 @@ def user_settings():
             return
     for field in userFieldnames:
         userReseponses.append(input(field + "?\n>>"))
-    logging.debug(userReseponses)
+    logging.debug("User settings set to " + userReseponses)
     with open(userPresetsFile, 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=userFieldnames)
         writer.writeheader()
@@ -212,57 +187,124 @@ def user_settings():
     pull_user_prefrences()
 
 def plant_settings():
-    #might want to have the original creation of the file autoamtically call the user settings input
-    #---creation of the file will now add the column names, 
 
-    #TODO rewrite this and the user section to adjust
-    # or something that will force at least one line to be printed so the try catch below to be simpler
-    # try:
-    #     with open(plantsFile, 'r', newline='') as csvfile:
-    #         print("csv opened")
-    #         logging.info("user preferences successfully read")
-    #         numRows = 0
-    #         reader = csv.DictReader(csvfile)
-    #         for row in reader:
-    #             print(row)
-    #             if (row==[]):
-    #                 print("Empty file! Lets fill that")
-    #                 logging.warning("empty file found for plants list")
-    #             numRows +=1
-    #         if (numRows == 0):
-    #             print("Empty file! Lets fill that")
-    #             logging.warning("empty file found for plants list")
-    # except FileNotFoundError:
-    #     logging.warning("user preferences file not found, attempting to create/ find both files")
-    #     file_check()
-    #     print("Empty file! Lets fill that")
-    # except:
-    #     logging.error(str(Exception) + " found when attempting to read user presets file")
-    #     print(str(Exception) + " found, check log files")
-    #     return
+    pull_plant_list()
     for plant in plantListList:
         print(plant)
-    print("Do you want to add or adjust the list?")
+    print("Do you want to add, adjust, or delete plants in the list?")
     match input(">>"):
         case 'add':
-            for item in plantFieldnames:
-                plantResponses.append(input(item + "?\n>>"))
-            with open(plantsFile, 'a', newline='') as csvfile:
-                plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-                plantWriter.writerow({'Plant':plantResponses[0], 'Placement':plantResponses[1], 
-                         'Pot Style':plantResponses[2],'Moisture':plantResponses[3], 
-                         'Temperature':plantResponses[4], 'Humidity':plantResponses[5]})
 
-            plantResponses.clear()
-            pull_plant_list()
-            return print("plant added") #append
-            #should this just be within this definition? like the only way to interact with the plants is within the plants command
-        case 'adjust':
-            plantResponses.clear()
+            active=True
+            while active:
+                for item in plantFieldnames:
+                    userResponse = input(item + "?\n>>")
+                    if userResponse == 'q' or userResponse == 'quit':
+                        active=False
+                        if len(plantResponses)<6:return
+                        break
+                    plantResponses.append(userResponse)
+
+                with open(plantsFile, 'a', newline='') as csvfile:
+                    if len(plantResponses)<6:return
+                    plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
+                    plantWriter.writerow({'Plant':plantResponses[0], 'Placement':plantResponses[1], 
+                            'Pot Style':plantResponses[2],'Moisture':plantResponses[3], 
+                            'Temperature':plantResponses[4], 'Humidity':plantResponses[5]})
+                    print("plant added")
+                    logging.debug("Plant added >> " + plantResponses)
+                    plantResponses.clear()
+            #0'plant', 1'placement', 2'pot style', 3'moisture', 4'temperature', 5'humidity'
+    
+        case 'adjust'|'adj':
+            #TODO add adjuster for specific plants within the plantlistlist so user can pull that plant and add additional/ changed information
+            # probably in a while active loop so all changes can be made 
+            # TODO make sure everything works here
+            #this function is dangerous to time management - this would likely be the sole cause to move to SQL for larger numbers of plants
+            active=True
+            while active:
+                pull_plant_list()
+                count=0
+                for plant in plantListList:
+                    print(str(count) + '--' + str(plant))
+                    count+=1
+                plantToModify = input("Which plant do you want to adjust?\n>>")
+                if plantToModify == 'q' or plantToModify == 'quit':
+                        active=False
+                        return
+                try:
+                    len(plantToModify)
+                except:
+                    logging.warning("Attempted to enter a non int non quit value to adjust plants, entry " + plantToModify + ", continuing")
+                    continue
+
+                for item in plantFieldnames:
+                    userResponse = input(item + "?\n>>")
+                    if userResponse == 'q' or userResponse == 'quit':
+                        active=False
+                        if len(plantResponses)<6:return
+                        break
+                    plantResponses.append(userResponse)
+                logging.debug(str(plantListList[int(plantToModify)]) + " adjusted to " + str(plantResponses))
+                print(plantResponses)
+                for plant in plantListList:
+                    print(plant)
+                input("press any key to continue")
+                plantListList[int(plantToModify)] = plantResponses
+                for plant in plantListList:
+                    print(plant)
+                with open(plantsFile, 'w', newline='') as csvfile:
+                        plantOverwriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
+                        plantOverwriter.writeheader
+                for row in plantListList:
+                        with open(plantsFile, 'a', newline='') as csvfile:
+                            plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
+                            plantWriter.writerow({'Plant':row[0], 'Placement':row[1], 
+                            'Pot Style':row[2],'Moisture':row[3], 
+                            'Temperature':row[4], 'Humidity':row[5]})
+                        # print({'Plant':row[0], 'Placement':row[1], 
+                        #     'Pot Style':row[2],'Moisture':row[3], 
+                        #     'Temperature':row[4], 'Humidity':row[5]})
+            #0'plant', 1'placement', 2'pot style', 3'moisture', 4'temperature', 5'humidity'
+                        print("Plants adjusted")
+                        plantResponses.clear()
+            
             return print("plants adjusted") #overwrite whole file with adjusted information
+        
+        case 'delete'|'del'|'d':
+            #TODO confirm functionality of delete and active loop
+            active=True
+            while active:
+                pull_plant_list()
+                count=0
+                for plant in plantListList:
+                    print(str(count) + '--' + str(plant))
+                    count+=1
+                plantToModify = input("Which plant do you want to delete?\n>>")
+                if plantToModify == 'q' or plantToModify == 'quit':
+                        active=False
+                        return
+                try:
+                    len(plantToModify)
+                except:
+                    logging.warning("Attempted to enter a non int non quit value to delete plants, entry " + plantToModify + ", continuing")
+                    continue
+                logging.debug(str(plantListList[int(plantToModify)]) + " deleted")
+                plantListList.pop(int(plantToModify))
+                with open(plantsFile, 'w', newline='') as csvfile:
+                        plantOverwriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
+                        plantOverwriter.writeheader
+                for row in plantListList:
+                        with open(plantsFile, 'a', newline='') as csvfile:
+                            plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
+                            plantWriter.writerow({'Plant':row[0], 'Placement':row[1], 
+                            'Pot Style':row[2],'Moisture':row[3], 
+                            'Temperature':row[4], 'Humidity':row[5]})
+                plantResponses.clear()
+
         case default:
             return
-    #0'plant', 1'placement', 2'pot style', 3'moisture', 4'temperature', 5'humidity'
+    
 
 def pull_plant_list():
     plantListList.clear()
