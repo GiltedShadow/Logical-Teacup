@@ -433,3 +433,74 @@ INFO:root:plantList.csv found
 2025-08-08 19:11:55,876 INFO plantList.csv found
 2025-08-08 19:11:55,876 INFO test.db found
 2025-08-08 19:12:04,828 DEBUG ['that', '', '', '', '', ''] deleted
+2025-08-08 19:22:37,425 INFO starting program
+2025-08-08 19:22:37,426 INFO UserPresets.csv found
+2025-08-08 19:22:37,426 INFO plantList.csv found
+2025-08-08 19:22:37,426 INFO test.db found
+2025-08-08 19:22:55,982 INFO starting program
+2025-08-08 19:22:55,982 INFO UserPresets.csv found
+2025-08-08 19:22:55,982 INFO plantList.csv found
+2025-08-08 19:22:55,982 INFO test.db found
+2025-08-08 19:23:02,947 DEBUG ['that', '', '', '', '', ''] deleted
+2025-08-08 19:23:07,825 DEBUG ['some of that', '', '', '', '', ''] deleted
+2025-08-08 19:23:23,038 DEBUG ['rosemary', '1c', 'long', 'rosemary', '1c', 'long'] deleted
+2025-08-08 19:23:26,089 DEBUG ['rosemary', '1c', 'long', '50', '60', '50'] deleted
+2025-08-08 19:26:24,499 DEBUG ['maybe this', '', '', '', '', ''] adjusted to ['rose', '2', 'short', '50', '50', '50']
+2025-08-08 19:29:05,538 INFO starting program
+2025-08-08 19:29:05,539 INFO UserPresets.csv found
+2025-08-08 19:29:05,539 INFO plantList.csv found
+2025-08-08 19:29:05,539 INFO test.db found
+2025-08-08 19:29:19,927 INFO user closing program
+2025-08-08 19:29:42,200 INFO starting program
+2025-08-08 19:29:42,200 INFO UserPresets.csv found
+2025-08-08 19:29:42,201 INFO plantList.csv found
+2025-08-08 19:29:42,201 INFO test.db found
+2025-08-08 19:30:05,514 DEBUG ['this', '', '', '', '', ''] adjusted to ['rose', 'short', 'short', '50', '50', '50']
+2025-08-08 19:33:03,913 INFO starting program
+2025-08-08 19:33:03,914 INFO UserPresets.csv found
+2025-08-08 19:33:03,914 INFO plantList.csv found
+2025-08-08 19:33:03,914 INFO test.db found
+2025-08-08 19:33:19,265 DEBUG ['that', '', '', '', '', ''] adjusted to ['this', '0', '0', '0', '0', '0']
+2025-08-08 19:35:38,480 INFO starting program
+2025-08-08 19:35:38,481 INFO UserPresets.csv found
+2025-08-08 19:35:38,481 INFO plantList.csv found
+2025-08-08 19:35:38,481 INFO test.db found
+2025-08-08 19:35:48,964 DEBUG ['this', '', '', '', '', ''] adjusted to ['1', '1', '1', '1', '1', '1']
+2025-08-08 19:36:33,795 INFO starting program
+2025-08-08 19:36:33,796 INFO UserPresets.csv found
+2025-08-08 19:36:33,796 INFO plantList.csv found
+2025-08-08 19:36:33,796 INFO test.db found
+2025-08-08 19:36:54,163 INFO starting program
+2025-08-08 19:36:54,164 INFO UserPresets.csv found
+2025-08-08 19:36:54,164 INFO plantList.csv found
+2025-08-08 19:36:54,164 INFO test.db found
+2025-08-08 19:37:03,136 DEBUG ['this', '', '', '', '', ''] adjusted to ['1', '1', '1', '1', '1', '1']
+2025-08-08 19:37:42,196 INFO starting program
+2025-08-08 19:37:42,197 INFO UserPresets.csv found
+2025-08-08 19:37:42,197 INFO plantList.csv found
+2025-08-08 19:37:42,197 INFO test.db found
+2025-08-08 19:38:01,764 INFO starting program
+2025-08-08 19:38:01,765 INFO UserPresets.csv found
+2025-08-08 19:38:01,765 INFO plantList.csv found
+2025-08-08 19:38:01,765 INFO test.db found
+2025-08-08 19:38:08,190 DEBUG ['this', '', '', '', '', ''] adjusted to ['1', '1', '1', '1', '1', '1']
+2025-08-08 19:40:12,370 INFO starting program
+2025-08-08 19:40:12,371 INFO UserPresets.csv found
+2025-08-08 19:40:12,371 INFO plantList.csv found
+2025-08-08 19:40:12,371 INFO test.db found
+2025-08-08 19:41:23,421 INFO starting program
+2025-08-08 19:41:23,422 INFO UserPresets.csv found
+2025-08-08 19:41:23,422 INFO plantList.csv found
+2025-08-08 19:41:23,422 INFO test.db found
+2025-08-08 19:41:42,959 INFO starting program
+2025-08-08 19:41:42,960 INFO UserPresets.csv found
+2025-08-08 19:41:42,960 INFO plantList.csv found
+2025-08-08 19:41:42,960 INFO test.db found
+2025-08-08 19:44:04,062 DEBUG ['that', '', '', '', '', ''] adjusted to ['1', '1', '1', '1', '1', '1']
+2025-08-08 19:44:59,121 INFO starting program
+2025-08-08 19:44:59,121 INFO UserPresets.csv found
+2025-08-08 19:44:59,121 INFO plantList.csv found
+2025-08-08 19:44:59,122 INFO test.db found
+2025-08-08 19:45:13,020 DEBUG ['this', '', '', '', '', ''] adjusted to ['rose', '1', 'short', '50', '50', '50']
+2025-08-08 19:45:28,153 DEBUG ['1', '1', '1', '1', '1', '1'] adjusted to ['oregano', '3', 'long', '50', '50', '50']
+2025-08-08 19:45:42,329 DEBUG ['some of that', '', '', '', '', ''] adjusted to ['dill', '3', 'long', '', '', '']
