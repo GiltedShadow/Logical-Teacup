@@ -95,7 +95,6 @@ userPresetsFile = "UserPresets.csv"
 plantsFile = "plantList.csv"
 databaseFile = "test.db"
 
-#TODO add spots available
 userFieldnames = ['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
 userReseponses = []
 plantFieldnames = ['Plant', 'Placement', 'Pot Style', 'Moisture' ,'Temperature', 'Humidity']
@@ -103,6 +102,8 @@ plantResponses = []
 
 userPrefList = []
 plantListList = []
+
+appSettings = {'Spots Available':0, 'Watering Style':'', 'Ventilation':''}
 
 introText = r"""
    ___       __          _____                     __ __                 
@@ -178,19 +179,19 @@ def user_settings():
     else:
         print(userPrefList)
         prompt = input("do you want to overwrite these values?  y/n\n>>")
-        if (prompt != 'y' or prompt != 'yes'):
+        if (prompt != 'y' and prompt != 'yes'):
             return
     for field in userFieldnames:
         userReseponses.append(input(field + "?\n>>"))
-    logging.debug("User settings set to " + userReseponses)
+    logging.debug("User settings set to " + str(userReseponses))
     with open(userPresetsFile, 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=userFieldnames)
         writer.writeheader()
-        writer.writerow({'Name':userReseponses[0], 'Watering Style':userReseponses[1], 
-                         'Ventilation':userReseponses[2],'Panels':userReseponses[3], 
-                         'Frame':userReseponses[4]})
+        writer.writerow({'Name':userReseponses[0], 'Spots Available':userReseponses[1],
+                         'Watering Style':userReseponses[2], 'Ventilation':userReseponses[3],
+                         'Panels':userReseponses[4], 'Frame':userReseponses[5]})
 
-        #['Name', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
+        #['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
     userReseponses.clear()
     pull_user_prefrences()
 
@@ -225,9 +226,6 @@ def plant_settings():
             #0'plant', 1'placement', 2'pot style', 3'moisture', 4'temperature', 5'humidity'
     
         case 'adjust'|'adj':
-            #TODO add adjuster for specific plants within the plantlistlist so user can pull that plant and add additional/ changed information
-            # probably in a while active loop so all changes can be made 
-            # TODO make sure everything works here
             #this function is dangerous to time management - this would likely be the sole cause to move to SQL for larger numbers of plants
             active=True
             while active:
@@ -324,10 +322,16 @@ def pull_plant_list():
 
 def pull_user_prefrences():
     userPrefList.clear()
+    appSettings['Spots Available'] = 0
     with open(userPresetsFile, 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            #print(row)
             userPrefList.append(row)
+            appSettings['Spots Available'] = int(row['Spots Available'])
+            appSettings['Ventilation'] = row['Ventilation']
+            appSettings['Watering Style'] = row['Watering Style']
+        
 ######################################################################################
 #Stage one - user information storage
 ######################################################################################
@@ -401,6 +405,7 @@ logging.info("starting program")
 file_check()
 pull_plant_list()
 pull_user_prefrences()
+#print(appSettings)
 # print(userPrefList)
 # for row in plantListList:
 #     print(row)

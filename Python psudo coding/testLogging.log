@@ -504,3 +504,52 @@ INFO:root:plantList.csv found
 2025-08-08 19:45:13,020 DEBUG ['this', '', '', '', '', ''] adjusted to ['rose', '1', 'short', '50', '50', '50']
 2025-08-08 19:45:28,153 DEBUG ['1', '1', '1', '1', '1', '1'] adjusted to ['oregano', '3', 'long', '50', '50', '50']
 2025-08-08 19:45:42,329 DEBUG ['some of that', '', '', '', '', ''] adjusted to ['dill', '3', 'long', '', '', '']
+2025-08-12 16:54:40,950 INFO starting program
+2025-08-12 16:54:40,950 INFO UserPresets.csv found
+2025-08-12 16:54:40,951 INFO plantList.csv found
+2025-08-12 16:54:40,951 INFO test.db found
+2025-08-12 16:56:01,596 INFO starting program
+2025-08-12 16:56:01,596 INFO UserPresets.csv found
+2025-08-12 16:56:01,596 INFO plantList.csv found
+2025-08-12 16:56:01,596 INFO test.db found
+2025-08-12 17:00:38,763 INFO starting program
+2025-08-12 17:00:38,764 INFO UserPresets.csv found
+2025-08-12 17:00:38,764 INFO plantList.csv found
+2025-08-12 17:00:38,764 INFO test.db found
+2025-08-12 17:00:55,906 DEBUG User settings set to ['Alexi', '10', 'auto', 'auto', 'glass', 'wood']
+2025-08-12 17:02:40,791 INFO starting program
+2025-08-12 17:02:40,791 INFO UserPresets.csv found
+2025-08-12 17:02:40,792 INFO plantList.csv found
+2025-08-12 17:02:40,792 INFO test.db found
+2025-08-12 17:03:45,171 INFO starting program
+2025-08-12 17:03:45,171 INFO UserPresets.csv found
+2025-08-12 17:03:45,171 INFO plantList.csv found
+2025-08-12 17:03:45,171 INFO test.db found
+2025-08-12 17:04:05,090 INFO starting program
+2025-08-12 17:04:05,090 INFO UserPresets.csv found
+2025-08-12 17:04:05,091 INFO plantList.csv found
+2025-08-12 17:04:05,091 INFO test.db found
+2025-08-12 17:04:24,669 INFO starting program
+2025-08-12 17:04:24,670 INFO UserPresets.csv found
+2025-08-12 17:04:24,670 INFO plantList.csv found
+2025-08-12 17:04:24,670 INFO test.db found
+2025-08-12 17:13:00,361 INFO starting program
+2025-08-12 17:13:00,362 INFO UserPresets.csv found
+2025-08-12 17:13:00,362 INFO plantList.csv found
+2025-08-12 17:13:00,362 INFO test.db found
+2025-08-12 17:13:23,388 INFO starting program
+2025-08-12 17:13:23,389 INFO UserPresets.csv found
+2025-08-12 17:13:23,389 INFO plantList.csv found
+2025-08-12 17:13:23,390 INFO test.db found
+2025-08-12 17:14:18,749 INFO starting program
+2025-08-12 17:14:18,750 INFO UserPresets.csv found
+2025-08-12 17:14:18,750 INFO plantList.csv found
+2025-08-12 17:14:18,750 INFO test.db found
+2025-08-12 17:23:45,848 INFO starting program
+2025-08-12 17:23:45,848 INFO UserPresets.csv found
+2025-08-12 17:23:45,848 INFO plantList.csv found
+2025-08-12 17:23:45,849 INFO test.db found
+2025-08-12 17:24:54,947 INFO starting program
+2025-08-12 17:24:54,947 INFO UserPresets.csv found
+2025-08-12 17:24:54,948 INFO plantList.csv found
+2025-08-12 17:24:54,948 INFO test.db found
