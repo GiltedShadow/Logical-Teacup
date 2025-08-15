@@ -76,7 +76,7 @@ Things that this needs to do:
 #DuckDB, SQLite
 
 #######################
-
+a#TODO change all csv changes and files to sqlite
 import csv
 import sqlite3
 import os
@@ -91,8 +91,8 @@ fileVersion = 0.2
 ######################################################################################
 #Stage one - user information storage
 ######################################################################################
-userPresetsFile = "UserPresets.csv"
-plantsFile = "plantList.csv"
+userPresetsFile = "UserPresets.csv" #FIXME
+plantsFile = "plantList.csv" #FIXME
 databaseFile = "test.db"
 
 userFieldnames = ['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
@@ -155,7 +155,7 @@ def power_down():
         logging.info("user closing program")
         exit()
 
-def file_check():
+def file_check(): #FIXME
     for file in (userPresetsFile, plantsFile, databaseFile):
         try:
             open(file, "x")
@@ -173,7 +173,7 @@ def file_check():
             logging.info(file + " found")
             print(file + " found")
 
-def user_settings():
+def user_settings(): #FIXME
     if (userPrefList == []):
         print("Empty file! Lets fill that")
     else:
@@ -195,7 +195,7 @@ def user_settings():
     userReseponses.clear()
     pull_user_prefrences()
 
-def plant_settings():
+def plant_settings(): #FIXME
 #TODO add a check to make sure that plants are not added to spots above "spots avaialable" found in the user presets file
     pull_plant_list()
     for plant in plantListList:
@@ -214,7 +214,7 @@ def plant_settings():
                         break
                     plantResponses.append(userResponse)
 
-                with open(plantsFile, 'a', newline='') as csvfile:
+                with open(plantsFile, 'a', newline='') as csvfile: #FIXME
                     if len(plantResponses)<6:return
                     plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
                     plantWriter.writerow({'Plant':plantResponses[0], 'Placement':plantResponses[1], 
@@ -260,7 +260,7 @@ def plant_settings():
                 plantListList[int(plantToModify)] = plantResponses
                 # for plant in plantListList:
                 #     print(plant)
-                with open(plantsFile, 'w', newline='') as csvfile:
+                with open(plantsFile, 'w', newline='') as csvfile: #FIXME
                     plantOverwriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
                     plantOverwriter.writeheader
                 for row in plantListList:
@@ -298,11 +298,11 @@ def plant_settings():
                 if plantToModify == 0:print("please do not attempt to remove the column names");continue
                 logging.debug(str(plantListList[int(plantToModify)]) + " deleted")
                 plantListList.pop(int(plantToModify))
-                with open(plantsFile, 'w', newline='') as csvfile:
+                with open(plantsFile, 'w', newline='') as csvfile: #FIXME
                         plantOverwriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
                         plantOverwriter.writeheader
                 for row in plantListList:
-                        with open(plantsFile, 'a', newline='') as csvfile:
+                        with open(plantsFile, 'a', newline='') as csvfile: #FIXME
                             plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
                             plantWriter.writerow({'Plant':row[0], 'Placement':row[1], 
                             'Pot Style':row[2],'Moisture':row[3], 
@@ -313,14 +313,14 @@ def plant_settings():
             return
     
 
-def pull_plant_list():
+def pull_plant_list(): #FIXME
     plantListList.clear()
     with open(plantsFile, 'r', newline='') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             plantListList.append(row)
 
-def pull_user_prefrences():
+def pull_user_prefrences(): #FIXME
     userPrefList.clear()
     appSettings['Spots Available'] = 0
     with open(userPresetsFile, 'r', newline='') as csvfile:
