@@ -553,3 +553,6 @@ INFO:root:plantList.csv found
 2025-08-12 17:24:54,947 INFO UserPresets.csv found
 2025-08-12 17:24:54,948 INFO plantList.csv found
 2025-08-12 17:24:54,948 INFO test.db found
+2025-08-19 15:52:21,402 INFO db connected to test.db
+2025-08-19 15:52:21,403 INFO starting program
+2025-08-19 15:52:21,404 INFO test.db found

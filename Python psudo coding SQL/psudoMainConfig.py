@@ -76,14 +76,15 @@ Things that this needs to do:
 #DuckDB, SQLite
 
 #######################
-a#TODO change all csv changes and files to sqlite
+#TODO change all csv changes and files to sqlite
 import csv
 import sqlite3
 import os
 import logging
-
-fileVersion = 0.2
-# 0.1 added full functionality of the plant tracking and user information based off of .csv files
+import databasePrinter #TODO either edit this file to pass a table call for print or add that functionality to this file - 
+                            # this might be an idea to keep separate but that may be just for the py file
+fileVersion = 0.15
+# 0.1 addding full functionality of the plant tracking and user information based off of sqlite db
 # 0.2 adding watering function based off of information input by the user
 # 0.3 adding air control based off of information input by the user and external temperature & humidity readings
 
@@ -91,8 +92,11 @@ fileVersion = 0.2
 ######################################################################################
 #Stage one - user information storage
 ######################################################################################
-userPresetsFile = "UserPresets.csv" #FIXME
-plantsFile = "plantList.csv" #FIXME
+FORMAT = '%(asctime)s %(levelname)s %(message)s'
+logging.basicConfig(filename="testLogging.log", level=logging.NOTSET, format=FORMAT)
+
+userPresetsFile = "UserPresets.csv" #FIXME remove when all csv calls are removed
+plantsFile = "plantList.csv" #FIXME remove when all csv calls are removed
 databaseFile = "test.db"
 
 userFieldnames = ['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
@@ -105,15 +109,12 @@ plantListList = []
 
 appSettings = {'Spots Available':0, 'Watering Style':'', 'Ventilation':''}
 
+
 introText = r"""
    ___       __          _____                     __ __                 
   / _ |__ __/ /____     / ___/______ ___ ___      / // /__  __ _____ ___ 
  / __ / // / __/ _ \   / (_ / __/ -_) -_) _ \    / _  / _ \/ // (_-</ -_)
 /_/ |_\_,_/\__/\___/   \___/_/  \__/\__/_//_/   /_//_/\___/\_,_/___/\__/ """
-
-FORMAT = '%(asctime)s %(levelname)s %(message)s'
-logging.basicConfig(filename="testLogging.log", level=logging.NOTSET, format=FORMAT)
-
 
 #User interface
 def userInterface(userInput):
@@ -129,12 +130,23 @@ def userInterface(userInput):
         case 'plants'|'plant'|'p':
             return plant_settings()
         case 'admin'|'a':
-            return whoops()
-        # case 'add plant':
-        #     return whoops()
+            return whoops() #TODO log in for admin to cause time to pass and check logic functions
         case default:
             return power_down()
         
+def dbConnect(arg:str):
+    global conn
+    global sqlCursor
+    logging.debug("db connection called - code - " + arg)
+    conn = sqlite3.connect(databaseFile)
+    logging.info("db connected to " + databaseFile)
+    sqlCursor = conn.cursor()
+    
+def dbDisconnect(arg:str):
+    try:
+        conn.close()
+    except:
+        logging.warning("disconnect called when no connection is established - code - " + arg)
 
 def help_text():
     print("""
@@ -155,25 +167,85 @@ def power_down():
         logging.info("user closing program")
         exit()
 
-def file_check(): #FIXME
-    for file in (userPresetsFile, plantsFile, databaseFile):
-        try:
-            open(file, "x")
-            logging.warning(file + " created and header added, file not found or first time running software")
-            print(file + " created - first time opening software")
-            if (file == userPresetsFile):
-                with open(file, 'w', newline = '') as csvfile:
-                    opener = csv.DictWriter(csvfile, fieldnames=userFieldnames)
-                    opener.writeheader()
-            elif (file == plantsFile):
-                with open(file, 'w', newline = '') as csvfile:
-                    opener = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-                    opener.writeheader()
-        except:
-            logging.info(file + " found")
-            print(file + " found")
+def create_plant_user_working_tables():
+    #Am i stupid? these need to be run together
+    #runs the creation of the table if not found within databaseFile
+    #TODO SQL CREATE TABLE IF NOT EXISTS
+    #['Plant', 'Placement', 'Pot Style', 'Moisture' ,'Temperature', 'Humidity']
+    #   PK         PK       
+    #['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
+    #  PK
+    sqlStatementCreateAllTables = """
+    CREATE TABLE IF NOT EXISTS Plants(
+        PlantName VARCHAR NOT NULL,
+        Placement INTEGER NOT NULL,
+        PlacementModifier VARCHAR NOT NULL,
+        PotStyle VARCHAR,
+        Moisture INTEGER,
+        Temperature INTEGER,
+        Humidity INTEGER,
+        PRIMARY KEY (PlantName, Placement, PlacementModifier)
+    )
+    
+    CREATE TABLE IF NOT EXISTS User_Settings(
+        Name VARCHAR NOT NULL,
+        SpotsAvailable INTEGER NOT NULL,
+        WateringStyle VARCHAR CHECK("AUTO", "MANUAL"),
+        Ventilation VARCHAR CHECK("AUTO", "MANUAL"),
+        Panels VARCAHR,
+        Frame VARCHAR,
+        PRIMARY KEY (Name)
+    )
+    
+    CREATE TABLE IF NOT EXISTS Plant_Working_Information(
+        Placement INTEGER NOT NULL,
+        PlacementModifier INTEGER NOT NULL,
+        TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        MoistureReading INTEGER
+        WateringTimer INTEGER
+        PRIMARY KEY (Placement, PlacementModifier, TimeTaken)
+    )
 
-def user_settings(): #FIXME
+    CREATE TABLE IF NOT EXISTS Air_Conditioning_Working_Information(
+        TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        Type VARCHAR CHECK("TEMPERATURE","HUMIDITY") NOT NULL,
+        ReadingOrAction VARCHAR CHECK("READING","ACTION") NOT NULL,
+        Reading INTEGER,
+        Action VARCHAR,
+        PRIMARY KEY (TimeTaken, Type, ReadingOrAction)
+    )
+    """
+    sqlCursor.execute(sqlStatementCreateAllTables)
+
+def file_check():
+    try:
+        open(databaseFile, 'x')
+        logging.warning(databaseFile + " created and tables created, db file not found or first time running software")
+        print(databaseFile + " created - first time openeing software")
+        create_plant_user_working_tables()
+    except:
+        logging.info(databaseFile + " found")
+        print(databaseFile + "found")
+        
+
+    # for file in (userPresetsFile, plantsFile, databaseFile):
+    #     try:
+    #         open(file, "x")
+    #         logging.warning(file + " created and header added, file not found or first time running software")
+    #         print(file + " created - first time opening software")
+    #         if (file == userPresetsFile):
+    #             with open(file, 'w', newline = '') as csvfile:
+    #                 opener = csv.DictWriter(csvfile, fieldnames=userFieldnames)
+    #                 opener.writeheader()
+    #         elif (file == plantsFile):
+    #             with open(file, 'w', newline = '') as csvfile:
+    #                 opener = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
+    #                 opener.writeheader()
+    #     except:
+    #         logging.info(file + " found")
+    #         print(file + " found")
+
+def user_settings(): #FIXME add sql calls to usersettings
     if (userPrefList == []):
         print("Empty file! Lets fill that")
     else:
@@ -195,7 +267,7 @@ def user_settings(): #FIXME
     userReseponses.clear()
     pull_user_prefrences()
 
-def plant_settings(): #FIXME
+def plant_settings(): #FIXME add sql calls to plant settings
 #TODO add a check to make sure that plants are not added to spots above "spots avaialable" found in the user presets file
     pull_plant_list()
     for plant in plantListList:
@@ -214,14 +286,14 @@ def plant_settings(): #FIXME
                         break
                     plantResponses.append(userResponse)
 
-                with open(plantsFile, 'a', newline='') as csvfile: #FIXME
+                with open(plantsFile, 'a', newline='') as csvfile: #FIXME plants file csv to sql
                     if len(plantResponses)<6:return
                     plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
                     plantWriter.writerow({'Plant':plantResponses[0], 'Placement':plantResponses[1], 
                             'Pot Style':plantResponses[2],'Moisture':plantResponses[3], 
                             'Temperature':plantResponses[4], 'Humidity':plantResponses[5]})
                     print("plant added")
-                    logging.debug("Plant added >> " + plantResponses)
+                    logging.debug("Plant added >> " + str(plantResponses))
                     plantResponses.clear()
             #0'plant', 1'placement', 2'pot style', 3'moisture', 4'temperature', 5'humidity'
     
@@ -260,7 +332,7 @@ def plant_settings(): #FIXME
                 plantListList[int(plantToModify)] = plantResponses
                 # for plant in plantListList:
                 #     print(plant)
-                with open(plantsFile, 'w', newline='') as csvfile: #FIXME
+                with open(plantsFile, 'w', newline='') as csvfile: #FIXME plants file csv to sql 2
                     plantOverwriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
                     plantOverwriter.writeheader
                 for row in plantListList:
@@ -298,11 +370,11 @@ def plant_settings(): #FIXME
                 if plantToModify == 0:print("please do not attempt to remove the column names");continue
                 logging.debug(str(plantListList[int(plantToModify)]) + " deleted")
                 plantListList.pop(int(plantToModify))
-                with open(plantsFile, 'w', newline='') as csvfile: #FIXME
+                with open(plantsFile, 'w', newline='') as csvfile: #FIXME plants file csv to sql 3
                         plantOverwriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
                         plantOverwriter.writeheader
                 for row in plantListList:
-                        with open(plantsFile, 'a', newline='') as csvfile: #FIXME
+                        with open(plantsFile, 'a', newline='') as csvfile: #FIXME plants file csv to sql 4
                             plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
                             plantWriter.writerow({'Plant':row[0], 'Placement':row[1], 
                             'Pot Style':row[2],'Moisture':row[3], 
@@ -313,14 +385,14 @@ def plant_settings(): #FIXME
             return
     
 
-def pull_plant_list(): #FIXME
+def pull_plant_list(): #FIXME sql call to pull plant list
     plantListList.clear()
     with open(plantsFile, 'r', newline='') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             plantListList.append(row)
 
-def pull_user_prefrences(): #FIXME
+def pull_user_prefrences(): #FIXME sql call to pull user settings
     userPrefList.clear()
     appSettings['Spots Available'] = 0
     with open(userPresetsFile, 'r', newline='') as csvfile:
@@ -402,6 +474,8 @@ def adjust_water():
 
 print(introText)
 logging.info("starting program")
+dbConnect("startup")
+dbDisconnect("startup")
 file_check()
 pull_plant_list()
 pull_user_prefrences()
