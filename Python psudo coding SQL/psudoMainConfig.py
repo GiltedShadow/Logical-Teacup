@@ -81,8 +81,8 @@ import csv
 import sqlite3
 import os
 import logging
-import databasePrinter #TODO either edit this file to pass a table call for print or add that functionality to this file - 
-                            # this might be an idea to keep separate but that may be just for the py file
+import databasePrinter as dbp #EZ DONE either edit this file to pass a table call for print or add that functionality to this file - 
+                                # this might be an idea to keep separate but that may be just for the py file
 fileVersion = 0.15
 # 0.1 addding full functionality of the plant tracking and user information based off of sqlite db
 # 0.2 adding watering function based off of information input by the user
@@ -95,26 +95,80 @@ fileVersion = 0.15
 FORMAT = '%(asctime)s %(levelname)s %(message)s'
 logging.basicConfig(filename="testLogging.log", level=logging.NOTSET, format=FORMAT)
 
-userPresetsFile = "UserPresets.csv" #FIXME remove when all csv calls are removed
 plantsFile = "plantList.csv" #FIXME remove when all csv calls are removed
 databaseFile = "test.db"
 
-userFieldnames = ['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
+#panels and frame here are kinda useless so far, maybe something about adding it to in a greenhouse or out in the open
+# watering style and ventilation will be true/false eg. true turning on automatic logic
+userFieldnames = ['Name', 'Spots Available', 'Watering Style: True(1)/False(0)', 'Ventilation: True(1)/False(0)', 'Panels', 'Frame']
 userReseponses = []
-plantFieldnames = ['Plant', 'Placement', 'Pot Style', 'Moisture' ,'Temperature', 'Humidity']
+plantFieldnames = ['Plant Name', 'Placement(int)', 'Placement Modifier(a, b, c, etc)', 'Pot Style', 'Moisture(int)' ,'Temperature(int)', 'Humidity(int)']
 plantResponses = []
 
-userPrefList = []
 plantListList = []
 
-appSettings = {'Spots Available':0, 'Watering Style':'', 'Ventilation':''}
-
+# watering style and ventilation will be true(1)/false(0) eg. true turning on automatic logic
+appSettings = {'Spots Available':0, 'Watering Style':False, 'Ventilation':False, 'Filled Out':False}
 
 introText = r"""
    ___       __          _____                     __ __                 
   / _ |__ __/ /____     / ___/______ ___ ___      / // /__  __ _____ ___ 
  / __ / // / __/ _ \   / (_ / __/ -_) -_) _ \    / _  / _ \/ // (_-</ -_)
 /_/ |_\_,_/\__/\___/   \___/_/  \__/\__/_//_/   /_//_/\___/\_,_/___/\__/ """
+
+#['Plant', 'Placement', 'Pot Style', 'Moisture' ,'Temperature', 'Humidity']
+#   PK         PK       
+sqlStatementCreatePlantTable = """
+CREATE TABLE IF NOT EXISTS Plants(
+    PlantName VARCHAR NOT NULL,
+    Placement INTEGER NOT NULL,
+    PlacementModifier VARCHAR NOT NULL,
+    PotStyle VARCHAR,
+    Moisture INTEGER,
+    Temperature INTEGER,
+    Humidity INTEGER,
+    PRIMARY KEY (PlantName, Placement, PlacementModifier)
+);"""
+
+#['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
+#  PK
+sqlStatementCreateUserTable = """
+CREATE TABLE IF NOT EXISTS User_Settings(
+    Name VARCHAR NOT NULL,
+    SpotsAvailable INTEGER NOT NULL,
+    WateringStyle INTEGER CHECK( WateringStyle in ('1', '0')) NOT NULL DEFAULT ('0'),
+    Ventilation INTEGER CHECK(Ventilation in ('1', '0')) NOT NULL DEFAULT ('0'),
+    Panels VARCAHR,
+    Frame VARCHAR,
+    PRIMARY KEY (Name)
+);"""
+
+# first two columns foreign keys?
+# see https://stackoverflow.com/questions/5299267/how-to-create-enum-type-in-sqlite
+sqlStatementCreateWorkingPlantTable = """
+CREATE TABLE IF NOT EXISTS Plant_Working_Information(
+    Placement INTEGER NOT NULL,
+    PlacementModifier INTEGER NOT NULL,
+    TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    MoistureReading INTEGER,
+    WateringTimer INTEGER,
+    PRIMARY KEY (Placement, PlacementModifier, TimeTaken)
+);"""
+
+sqlStatementCreateAirconTable = """
+CREATE TABLE IF NOT EXISTS Air_Conditioning_Working_Information(
+    TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Type VARCHAR CHECK(Type in ("TEMPERATURE","HUMIDITY")) NOT NULL,
+    ReadingOrAction VARCHAR CHECK(ReadingOrAction in ("READING","ACTION")) NOT NULL,
+    Reading INTEGER,
+    Action VARCHAR,
+    PRIMARY KEY (TimeTaken, Type, ReadingOrAction)
+);"""
+
+plantsTableCheck = 'SELECT * FROM Plants'
+userTableCheck = 'SELECT * FROM User_Settings'
+workingPlantsTableCheck = 'SELECT * FROM Plant_Working_Information'
+airconTableCheck = 'SELECT * FROM Air_Conditioning_Working_Information'
 
 #User interface
 def userInterface(userInput):
@@ -131,22 +185,66 @@ def userInterface(userInput):
             return plant_settings()
         case 'admin'|'a':
             return whoops() #TODO log in for admin to cause time to pass and check logic functions
+        case 'dbprint'|'db':
+            return dbPrint()
         case default:
             return power_down()
         
+def dbPrint():
+    active=True
+    while(active):
+        userInput = input("""
+1. Full db 
+2. plants table
+3. user settings table
+4. plant backend table
+5. aircon backend table 
+>>""")
+        try:
+            int(userInput)
+        except:
+            print("Please enter a number, quitting to menu")
+            return
+        match userInput:
+            case '1':
+                dbp.connectToDB(databaseFile)
+                dbp.fancyPrintDatabase()
+                dbp.disconnectToDB
+            case '2':
+                dbp.connectToDB(databaseFile)
+                dbp.fancyPrintTable('Plants')
+                dbp.disconnectToDB
+            case '3':
+                dbp.connectToDB(databaseFile)
+                dbp.fancyPrintTable('User_Settings')
+                dbp.disconnectToDB
+            case '4':
+                dbp.connectToDB(databaseFile)
+                dbp.fancyPrintTable('Plant_Working_Information')
+                dbp.disconnectToDB
+            case '5':
+                dbp.connectToDB(databaseFile)
+                dbp.fancyPrintTable('Air_Conditioning_Working_Information')
+                dbp.disconnectToDB
+            case default:
+                active = False
+                return
+
 def dbConnect(arg:str):
     global conn
     global sqlCursor
     logging.debug("db connection called - code - " + arg)
     conn = sqlite3.connect(databaseFile)
-    logging.info("db connected to " + databaseFile)
+    if arg=="startup":
+        logging.info("db connected to " + databaseFile)
     sqlCursor = conn.cursor()
     
 def dbDisconnect(arg:str):
     try:
+        logging.debug("db disconnection called - code - " + arg)
         conn.close()
     except:
-        logging.warning("disconnect called when no connection is established - code - " + arg)
+        logging.warning("db disconnect called when no connection is established - code - " + arg)
 
 def help_text():
     print("""
@@ -156,6 +254,7 @@ version ---- will print out the file version
 file check - will search for files and will create them if not found
 settings --- checks current user preferences and sets them
 plants ----- checks current plant list and allows new/ changed entries
+dbprint ---- print out the database or specified table
 """)
 
 def whoops():
@@ -167,101 +266,81 @@ def power_down():
         logging.info("user closing program")
         exit()
 
-def create_plant_user_working_tables():
+def create_all_tables():
     #Am i stupid? these need to be run together
     #runs the creation of the table if not found within databaseFile
-    #TODO SQL CREATE TABLE IF NOT EXISTS
-    #['Plant', 'Placement', 'Pot Style', 'Moisture' ,'Temperature', 'Humidity']
-    #   PK         PK       
-    #['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
-    #  PK
-    sqlStatementCreateAllTables = """
-    CREATE TABLE IF NOT EXISTS Plants(
-        PlantName VARCHAR NOT NULL,
-        Placement INTEGER NOT NULL,
-        PlacementModifier VARCHAR NOT NULL,
-        PotStyle VARCHAR,
-        Moisture INTEGER,
-        Temperature INTEGER,
-        Humidity INTEGER,
-        PRIMARY KEY (PlantName, Placement, PlacementModifier)
-    )
-    
-    CREATE TABLE IF NOT EXISTS User_Settings(
-        Name VARCHAR NOT NULL,
-        SpotsAvailable INTEGER NOT NULL,
-        WateringStyle VARCHAR CHECK("AUTO", "MANUAL"),
-        Ventilation VARCHAR CHECK("AUTO", "MANUAL"),
-        Panels VARCAHR,
-        Frame VARCHAR,
-        PRIMARY KEY (Name)
-    )
-    
-    CREATE TABLE IF NOT EXISTS Plant_Working_Information(
-        Placement INTEGER NOT NULL,
-        PlacementModifier INTEGER NOT NULL,
-        TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        MoistureReading INTEGER
-        WateringTimer INTEGER
-        PRIMARY KEY (Placement, PlacementModifier, TimeTaken)
-    )
-
-    CREATE TABLE IF NOT EXISTS Air_Conditioning_Working_Information(
-        TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        Type VARCHAR CHECK("TEMPERATURE","HUMIDITY") NOT NULL,
-        ReadingOrAction VARCHAR CHECK("READING","ACTION") NOT NULL,
-        Reading INTEGER,
-        Action VARCHAR,
-        PRIMARY KEY (TimeTaken, Type, ReadingOrAction)
-    )
-    """
-    sqlCursor.execute(sqlStatementCreateAllTables)
+    #DONE SQL CREATE TABLE IF NOT EXISTS #DONE confirm sql table creation works
+    #dbConnect("creating tables")
+    sqlCursor.execute(sqlStatementCreatePlantTable)
+    logging.debug("plant table created")
+    sqlCursor.execute(sqlStatementCreateUserTable)
+    logging.debug("user table created")
+    sqlCursor.execute(sqlStatementCreateWorkingPlantTable)
+    logging.debug("working plant table created")
+    sqlCursor.execute(sqlStatementCreateAirconTable)
+    logging.debug("aircon table created")
+    #dbDisconnect("creating tables")
 
 def file_check():
     try:
         open(databaseFile, 'x')
         logging.warning(databaseFile + " created and tables created, db file not found or first time running software")
         print(databaseFile + " created - first time openeing software")
-        create_plant_user_working_tables()
     except:
         logging.info(databaseFile + " found")
         print(databaseFile + "found")
-        
 
-    # for file in (userPresetsFile, plantsFile, databaseFile):
-    #     try:
-    #         open(file, "x")
-    #         logging.warning(file + " created and header added, file not found or first time running software")
-    #         print(file + " created - first time opening software")
-    #         if (file == userPresetsFile):
-    #             with open(file, 'w', newline = '') as csvfile:
-    #                 opener = csv.DictWriter(csvfile, fieldnames=userFieldnames)
-    #                 opener.writeheader()
-    #         elif (file == plantsFile):
-    #             with open(file, 'w', newline = '') as csvfile:
-    #                 opener = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-    #                 opener.writeheader()
-    #     except:
-    #         logging.info(file + " found")
-    #         print(file + " found")
+    logging.debug("checking for tables")
+    try:
+        dbConnect("checking for tables")
+        for statement in [plantsTableCheck, userTableCheck, workingPlantsTableCheck, airconTableCheck]:
+            logging.debug("Checking " + statement)
+            sqlCursor.execute(statement)
+        logging.debug("All tables accounted for")
+        dbDisconnect("checking for tables")
+    except sqlite3.OperationalError:
+        logging.debug("creating tables after failed check for tables existing")
+        dbConnect("creating tables after failed check")
+        create_all_tables()
+        dbDisconnect("creating tables after failed check")
+    except:
+        logging.error("issue happened when attempting to check for tables")
+        print("Tables not confirmed")
 
-def user_settings(): #FIXME add sql calls to usersettings
-    if (userPrefList == []):
+def user_settings(): #DONE add sql calls to usersettings
+    if (appSettings['Filled Out'] == False): #checked without pulling the whole table, not stressing the db even though its quick to access
         print("Empty file! Lets fill that")
     else:
-        print(userPrefList)
+        print(appSettings)
         prompt = input("do you want to overwrite these values?  y/n\n>>")
         if (prompt != 'y' and prompt != 'yes'):
             return
-    for field in userFieldnames:
-        userReseponses.append(input(field + "?\n>>"))
+    x=0
+    while(x<len(userFieldnames)):
+        response = input(userFieldnames[x] + "?\n>>")
+        if(x<=3 and response == ''):
+            print("Please enter a value, this is a non null entry")
+            continue
+        if(1<=x<=3):
+            try:
+                int(response)
+            except:
+                print("Please enter an integer for this value")
+                continue
+        userReseponses.append(response)
+        x+=1
+            
     logging.debug("User settings set to " + str(userReseponses))
-    with open(userPresetsFile, 'w', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=userFieldnames)
-        writer.writeheader()
-        writer.writerow({'Name':userReseponses[0], 'Spots Available':userReseponses[1],
-                         'Watering Style':userReseponses[2], 'Ventilation':userReseponses[3],
-                         'Panels':userReseponses[4], 'Frame':userReseponses[5]})
+    sqlStatementDeleteUserTableInformation = """DELETE FROM User_Settings"""
+    sqlStatement = f"""
+INSERT INTO User_Settings (Name, SpotsAvailable, WateringStyle, Ventilation, Panels, Frame)
+VALUES('{userReseponses[0]}', {userReseponses[1]}, {userReseponses[2]}, {userReseponses[3]}, '{userReseponses[4]}', '{userReseponses[5]}')"""
+    dbConnect("inputting information")
+
+    sqlCursor.execute(sqlStatementDeleteUserTableInformation)
+    sqlCursor.execute(sqlStatement)
+    conn.commit()
+    dbDisconnect("inputting information")
 
         #['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
     userReseponses.clear()
@@ -274,7 +353,7 @@ def plant_settings(): #FIXME add sql calls to plant settings
         print(plant)
     print("Do you want to add, adjust, or delete plants in the list?")
     match input(">>"):
-        case 'add':
+        case 'add': #FIXME WORKING add plant
 
             active=True
             while active:
@@ -350,10 +429,12 @@ def plant_settings(): #FIXME add sql calls to plant settings
             
             return print("plants adjusted") #overwrite whole file with adjusted information
         
-        case 'delete'|'del'|'d':
+        case 'delete'|'del'|'d': 
             active=True
             while active:
-                pull_plant_list()
+                dbp.connectToDB(databaseFile)
+                dbp.fancyPrintTable("Plants")
+                dbp.disconnectToDB()
                 count=0
                 for plant in plantListList:
                     print(str(count) + '--' + str(plant))
@@ -386,23 +467,34 @@ def plant_settings(): #FIXME add sql calls to plant settings
     
 
 def pull_plant_list(): #FIXME sql call to pull plant list
-    plantListList.clear()
-    with open(plantsFile, 'r', newline='') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            plantListList.append(row)
+    #Do we need this anymore? everyting can be directly modified with a sql statement
+    pass
+    # plantListList.clear()
+    # with open(plantsFile, 'r', newline='') as csvfile:
+    #     reader = csv.reader(csvfile)
+    #     for row in reader:
+    #         plantListList.append(row)
 
-def pull_user_prefrences(): #FIXME sql call to pull user settings
-    userPrefList.clear()
+def pull_user_prefrences(): #DONE sql call to pull user settings
+    #   only pull pertanent information like the appSettings dict, maybe the name
     appSettings['Spots Available'] = 0
-    with open(userPresetsFile, 'r', newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            #print(row)
-            userPrefList.append(row)
-            appSettings['Spots Available'] = int(row['Spots Available'])
-            appSettings['Ventilation'] = row['Ventilation']
-            appSettings['Watering Style'] = row['Watering Style']
+    appSettings['Ventilation'] = False
+    appSettings['Watering Style'] = False
+
+    dbConnect("pulling app settings")
+
+    sqlCursor.execute("SELECT * FROM User_Settings")
+    settingsPull = sqlCursor.fetchall() #need to add user data to test this
+    if settingsPull == []:appSettings['Filled Out'] = False
+    else:appSettings['Filled Out'] = True;print("user settings loaded")
+    appSettings['Spots Available'] = settingsPull[0][1]
+    if settingsPull[0][2] == 1:appSettings['Watering Style']=True
+    else: appSettings['Watering Style']=False
+    if settingsPull[0][3] == 1:appSettings['Ventilation']=True
+    else: appSettings['Ventilation']=False
+    #print(settingsPull)
+    #print(appSettings['Filled Out'])
+    dbDisconnect("Pulling app settings")
         
 ######################################################################################
 #Stage one - user information storage
@@ -476,11 +568,11 @@ print(introText)
 logging.info("starting program")
 dbConnect("startup")
 dbDisconnect("startup")
+#dbPrint()
 file_check()
 pull_plant_list()
 pull_user_prefrences()
 #print(appSettings)
-# print(userPrefList)
 # for row in plantListList:
 #     print(row)
 while(True):

@@ -25,6 +25,12 @@ def connectToDB(dbName):
     conn = sqlite3.connect(db)
     sqlCursor = conn.cursor()
 
+def disconnectToDB():
+    try:
+        conn.close()
+    except:
+        pass
+
 def createTablesAndAddInfo():
     sqlCursor.execute("CREATE TABLE test (name TEXT, description TEXT)")
     for item in range(10):
@@ -74,27 +80,52 @@ def fancyPrintDatabase():
         tableList.append(item)
 
     for table in tableList:
+        numColumns = 1
         columnNames='|'
         sqlCursor.execute("SELECT * FROM " + table)
         tabledata = sqlCursor.fetchall()
 
         sqlDescription = sqlCursor.description
         for column in sqlDescription:
-            columnNames = columnNames + (column[0].center(15, ' ') + '|')
+            columnNames = columnNames + (column[0].center(16, ' ') + '|')
+            numColumns += 1
 
-        print(str(table).center(20, '-'))
-        print('*'*35)
+        print(str(table).center(numColumns*5, '-'))
+        print(('*'*15) * numColumns)
         print(columnNames)
-        print('*'*35)
+        print(('*'*15) * numColumns)
 
         for row in tabledata:
             rowValues = '|'
             for item in row:
-                rowValues = rowValues + str(item).center(15, ' ') + '|'
+                rowValues = rowValues + str(item).center(16, ' ') + '|'
             print(rowValues)
 
         print("\n\n")
         
+def fancyPrintTable(table):
+    numColumns = 1
+    columnNames='|'
+    sqlCursor.execute("SELECT * FROM " + table)
+    tabledata = sqlCursor.fetchall()
+
+    sqlDescription = sqlCursor.description
+    for column in sqlDescription:
+        columnNames = columnNames + (column[0].center(16, ' ') + '|')
+        numColumns += 1
+
+    print(str(table).center(numColumns*5, '-'))
+    print(('*'*15) * numColumns)
+    print(columnNames)
+    print(('*'*15) * numColumns)
+
+    for row in tabledata:
+        rowValues = '|'
+        for item in row:
+            rowValues = rowValues + str(item).center(16, ' ') + '|'
+        print(rowValues)
+        
+    print("\n\n")
 
 if __name__ == "__main__":
     #I finally have a use for this :3
