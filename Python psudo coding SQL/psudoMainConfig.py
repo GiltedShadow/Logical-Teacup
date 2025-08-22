@@ -116,7 +116,7 @@ introText = r"""
  / __ / // / __/ _ \   / (_ / __/ -_) -_) _ \    / _  / _ \/ // (_-</ -_)
 /_/ |_\_,_/\__/\___/   \___/_/  \__/\__/_//_/   /_//_/\___/\_,_/___/\__/ """
 
-#['Plant', 'Placement', 'Pot Style', 'Moisture' ,'Temperature', 'Humidity']
+#['Plant Name', 'Placement(int)', 'Placement Modifier(a, b, c, etc)', 'Pot Style', 'Moisture(int)' ,'Temperature(int)', 'Humidity(int)']
 #   PK         PK       
 sqlStatementCreatePlantTable = """
 CREATE TABLE IF NOT EXISTS Plants(
@@ -354,27 +354,39 @@ def plant_settings(): #FIXME add sql calls to plant settings
     print("Do you want to add, adjust, or delete plants in the list?")
     match input(">>"):
         case 'add': #FIXME WORKING add plant
-
-            active=True
-            while active:
-                for item in plantFieldnames:
-                    userResponse = input(item + "?\n>>")
-                    if userResponse == 'q' or userResponse == 'quit':
-                        active=False
-                        if len(plantResponses)<6:return
-                        break
-                    plantResponses.append(userResponse)
-
-                with open(plantsFile, 'a', newline='') as csvfile: #FIXME plants file csv to sql
+            x=0
+            print("press q to quit at any time")
+            while(x<len(plantFieldnames)):
+                response = input(plantFieldnames[x] + "?\n>>")
+                if response.lower() == 'q' or response.lower() == 'quit':
+                    x=99
                     if len(plantResponses)<6:return
-                    plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-                    plantWriter.writerow({'Plant':plantResponses[0], 'Placement':plantResponses[1], 
-                            'Pot Style':plantResponses[2],'Moisture':plantResponses[3], 
-                            'Temperature':plantResponses[4], 'Humidity':plantResponses[5]})
-                    print("plant added")
-                    logging.debug("Plant added >> " + str(plantResponses))
-                    plantResponses.clear()
-            #0'plant', 1'placement', 2'pot style', 3'moisture', 4'temperature', 5'humidity'
+                    continue
+                #0-2 non null, 1 4 5 6 int, 2 single VARCHAR
+                if (x<=2 and response==''):
+                    print("Please enter a value, this is a non null entry")
+                    continue
+
+            # active=True
+            # while active:
+            #     for item in plantFieldnames:
+            #         userResponse = input(item + "?\n>>")
+            #         if userResponse == 'q' or userResponse == 'quit':
+            #             active=False
+            #             if len(plantResponses)<6:return
+            #             break
+            #         plantResponses.append(userResponse)
+
+            #     with open(plantsFile, 'a', newline='') as csvfile: #FIXME plants file csv to sql
+            #         if len(plantResponses)<6:return
+            #         plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
+            #         plantWriter.writerow({'Plant':plantResponses[0], 'Placement':plantResponses[1], 
+            #                 'Pot Style':plantResponses[2],'Moisture':plantResponses[3], 
+            #                 'Temperature':plantResponses[4], 'Humidity':plantResponses[5]})
+            #         print("plant added")
+            #         logging.debug("Plant added >> " + str(plantResponses))
+            #         plantResponses.clear()
+            #0'Plant Name', 1'Placement(int)', 2'Placement Modifier(a, b, c, etc)', 3'Pot Style', 4'Moisture(int)', 5'Temperature(int)', 6'Humidity(int)'
     
         case 'adjust'|'adj':
             #this function is dangerous to time management - this would likely be the sole cause to move to SQL for larger numbers of plants
@@ -423,7 +435,7 @@ def plant_settings(): #FIXME add sql calls to plant settings
                     # print({'Plant':row[0], 'Placement':row[1], 
                     #     'Pot Style':row[2],'Moisture':row[3], 
                     #     'Temperature':row[4], 'Humidity':row[5]})
-            #0'plant', 1'placement', 2'pot style', 3'moisture', 4'temperature', 5'humidity'
+            #0'Plant Name', 1'Placement(int)', 2'Placement Modifier(a, b, c, etc)', 3'Pot Style', 4'Moisture(int)', 5'Temperature(int)', 6'Humidity(int)'
                         print("Plants adjusted")
                 plantResponses.clear()
             
