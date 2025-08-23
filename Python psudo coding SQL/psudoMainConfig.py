@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 """
 Python 3.13
 Created by Alex Norment
@@ -353,42 +354,65 @@ def plant_settings(): #FIXME add sql calls to plant settings
         print(plant)
     print("Do you want to add, adjust, or delete plants in the list?")
     match input(">>"):
-        case 'add': #FIXME WORKING add plant
-            x=0
-            print("press q to quit at any time")
-            while(x<len(plantFieldnames)):
-                response = input(plantFieldnames[x] + "?\n>>")
-                if response.lower() == 'q' or response.lower() == 'quit':
-                    x=99
-                    if len(plantResponses)<6:return
-                    continue
-                #0-2 non null, 1 4 5 6 int, 2 single VARCHAR
-                if (x<=2 and response==''):
-                    print("Please enter a value, this is a non null entry")
-                    continue
-
-            # active=True
-            # while active:
-            #     for item in plantFieldnames:
-            #         userResponse = input(item + "?\n>>")
-            #         if userResponse == 'q' or userResponse == 'quit':
-            #             active=False
-            #             if len(plantResponses)<6:return
-            #             break
-            #         plantResponses.append(userResponse)
-
-            #     with open(plantsFile, 'a', newline='') as csvfile: #FIXME plants file csv to sql
-            #         if len(plantResponses)<6:return
-            #         plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-            #         plantWriter.writerow({'Plant':plantResponses[0], 'Placement':plantResponses[1], 
-            #                 'Pot Style':plantResponses[2],'Moisture':plantResponses[3], 
-            #                 'Temperature':plantResponses[4], 'Humidity':plantResponses[5]})
-            #         print("plant added")
-            #         logging.debug("Plant added >> " + str(plantResponses))
-            #         plantResponses.clear()
+        case 'add': 
+            active=True
+            while(active):
+                plantResponses.clear()
+                x=0
+                print("enter q to quit at any time")
+                while(x<len(plantFieldnames)):# lol while(while)? maybe a better way here, a goto command would be great
+                    response = input(plantFieldnames[x] + "?\n>>")
+                    if response.lower() == 'q' or response.lower() == 'quit':
+                        x=99
+                        active=False
+                        if len(plantResponses)<6:return
+                        continue
+                    #0-2 non null, 1 4 5 6 int, 2 single VARCHAR, 1 not more than the number of spots
+                    if (x<=2 and response==''):
+                        print("Please enter a value, this is a non null entry")
+                        continue
+                    if (x==1 or 4<=x<=6 and response != ''):
+                        try:
+                            int(response)
+                        except:
+                            print("Please enter an integer for this value")
+                            continue
+                    if (x==1 and int(response)>int(appSettings['Spots Available'])):
+                        print("Plant placement over number of available spots, please add more spots or addjust")
+                        continue
+                    if (x==2):
+                        try:
+                            int(response)
+                            print("Please enter an alphabetic character for the modifier")
+                            continue
+                        except:
+                            pass
+                        finally:
+                            if(len(response)>1):
+                                print("This value should only be one letter long")
+                                continue
+                        
+                    plantResponses.append(response)
+                    x+=1
+                print(plantResponses)
+                dbConnect("Adding a plant")
+                statement = f"""
+INSERT INTO Plants (PlantName, Placement, PlacementModifier, PotStyle, Moisture, Temperature, Humidity)
+VALUES('{plantResponses[0]}', {plantResponses[1]}, '{plantResponses[2]}', '{plantResponses[3]}', '{plantResponses[4]}', '{plantResponses[5]}', '{plantResponses[6]}')"""
+                try:
+                    sqlCursor.execute(statement)
+                    conn.commit()
+                    dbDisconnect("Adding a plant")
+                    print("Add more?")
+                    response = input(">>").lower()
+                    if(response !='y' and response !='yes'):
+                        active=False
+                except sqlite3.IntegrityError:
+                    print("That unique key (name, spot, modifier) already exists. These values together must be unique")
+                    dbDisconnect("Failed at adding a plant")
             #0'Plant Name', 1'Placement(int)', 2'Placement Modifier(a, b, c, etc)', 3'Pot Style', 4'Moisture(int)', 5'Temperature(int)', 6'Humidity(int)'
     
-        case 'adjust'|'adj':
+        case 'adjust'|'adj': #FIXME WORKING adjust plant 
             #this function is dangerous to time management - this would likely be the sole cause to move to SQL for larger numbers of plants
             active=True
             while active:
