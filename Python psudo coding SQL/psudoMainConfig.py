@@ -77,14 +77,14 @@ Things that this needs to do:
 #DuckDB, SQLite
 
 #######################
-#TODO change all csv changes and files to sqlite
+#DONE change all csv changes and files to sqlite
 import csv
 import sqlite3
 import os
 import logging
 import databasePrinter as dbp #EZ DONE either edit this file to pass a table call for print or add that functionality to this file - 
                                 # this might be an idea to keep separate but that may be just for the py file
-fileVersion = 0.15
+fileVersion = 0.25
 # 0.1 addding full functionality of the plant tracking and user information based off of sqlite db
 # 0.2 adding watering function based off of information input by the user
 # 0.3 adding air control based off of information input by the user and external temperature & humidity readings
@@ -96,7 +96,6 @@ fileVersion = 0.15
 FORMAT = '%(asctime)s %(levelname)s %(message)s'
 logging.basicConfig(filename="testLogging.log", level=logging.NOTSET, format=FORMAT)
 
-plantsFile = "plantList.csv" #FIXME remove when all csv calls are removed
 databaseFile = "test.db"
 
 #panels and frame here are kinda useless so far, maybe something about adding it to in a greenhouse or out in the open
@@ -118,7 +117,7 @@ introText = r"""
 /_/ |_\_,_/\__/\___/   \___/_/  \__/\__/_//_/   /_//_/\___/\_,_/___/\__/ """
 
 #['Plant Name', 'Placement(int)', 'Placement Modifier(a, b, c, etc)', 'Pot Style', 'Moisture(int)' ,'Temperature(int)', 'Humidity(int)']
-#   PK         PK       
+#                      PK             PK       
 sqlStatementCreatePlantTable = """
 CREATE TABLE IF NOT EXISTS Plants(
     PlantName VARCHAR NOT NULL,
@@ -128,7 +127,7 @@ CREATE TABLE IF NOT EXISTS Plants(
     Moisture INTEGER,
     Temperature INTEGER,
     Humidity INTEGER,
-    PRIMARY KEY (PlantName, Placement, PlacementModifier)
+    PRIMARY KEY (Placement, PlacementModifier)
 );"""
 
 #['Name', 'Spots Available', 'Watering Style', 'Ventilation', 'Panels', 'Frame']
@@ -166,6 +165,10 @@ CREATE TABLE IF NOT EXISTS Air_Conditioning_Working_Information(
     PRIMARY KEY (TimeTaken, Type, ReadingOrAction)
 );"""
 
+sqlStatementSortedPlantsSelect = """
+SELECT * FROM Plants
+ORDER BY Placement, PlacementModifier"""
+
 plantsTableCheck = 'SELECT * FROM Plants'
 userTableCheck = 'SELECT * FROM User_Settings'
 workingPlantsTableCheck = 'SELECT * FROM Plant_Working_Information'
@@ -187,11 +190,22 @@ def userInterface(userInput):
         case 'admin'|'a':
             return whoops() #TODO log in for admin to cause time to pass and check logic functions
         case 'dbprint'|'db':
-            return dbPrint()
+            return db_print()
+        case 'rt': #TODO move to deleting table or another function
+            pass
+            # dbConnect("reset table")
+            # sqlCursor.execute("DROP TABLE IF EXISTS Plants")
+            # sqlCursor.execute(sqlStatementCreatePlantTable)
+            # conn.commit()
+            # dbDisconnect('reset table')
         case default:
             return power_down()
         
-def dbPrint():
+def db_print():
+    #DONE change table print to order by specific columns
+    # ADDED ability but prints specific table and not the full db
+    # either by adding a custom print via databasePrinter.py or by running the select on its own, but then the fancy print would need to be added here
+    # add a custom fancy that passes the sql statement
     active=True
     while(active):
         userInput = input("""
@@ -208,25 +222,26 @@ def dbPrint():
             return
         match userInput:
             case '1':
-                dbp.connectToDB(databaseFile)
-                dbp.fancyPrintDatabase()
-                dbp.disconnectToDB
+                dbp.connect_to_DB(databaseFile)
+                dbp.fancy_print_database()
+                dbp.connect_to_DB
             case '2':
-                dbp.connectToDB(databaseFile)
-                dbp.fancyPrintTable('Plants')
-                dbp.disconnectToDB
+                dbp.connect_to_DB(databaseFile)
+                dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
+                #dbp.fancy_print_table('Plants')
+                dbp.connect_to_DB
             case '3':
-                dbp.connectToDB(databaseFile)
-                dbp.fancyPrintTable('User_Settings')
-                dbp.disconnectToDB
+                dbp.connect_to_DB(databaseFile)
+                dbp.fancy_print_table('User_Settings')
+                dbp.connect_to_DB
             case '4':
-                dbp.connectToDB(databaseFile)
-                dbp.fancyPrintTable('Plant_Working_Information')
-                dbp.disconnectToDB
+                dbp.connect_to_DB(databaseFile)
+                dbp.fancy_print_table('Plant_Working_Information')
+                dbp.connect_to_DB
             case '5':
-                dbp.connectToDB(databaseFile)
-                dbp.fancyPrintTable('Air_Conditioning_Working_Information')
-                dbp.disconnectToDB
+                dbp.connect_to_DB(databaseFile)
+                dbp.fancy_print_table('Air_Conditioning_Working_Information')
+                dbp.connect_to_DB
             case default:
                 active = False
                 return
@@ -308,7 +323,7 @@ def file_check():
         logging.error("issue happened when attempting to check for tables")
         print("Tables not confirmed")
 
-def user_settings(): #DONE add sql calls to usersettings
+def user_settings():
     if (appSettings['Filled Out'] == False): #checked without pulling the whole table, not stressing the db even though its quick to access
         print("Empty file! Lets fill that")
     else:
@@ -347,54 +362,91 @@ VALUES('{userReseponses[0]}', {userReseponses[1]}, {userReseponses[2]}, {userRes
     userReseponses.clear()
     pull_user_prefrences()
 
-def plant_settings(): #FIXME add sql calls to plant settings
-#TODO add a check to make sure that plants are not added to spots above "spots avaialable" found in the user presets file
-    pull_plant_list()
+def get_plant_input(addOrAdj:str):
+    plantResponses.clear()
+    x=0
+    print("enter q to quit at any time")
+    while(x<len(plantFieldnames)):# lol while(while)? maybe a better way here, a goto command would be great
+        response = input(plantFieldnames[x] + "?\n>>")
+        if (addOrAdj.lower() == 'adj' and 1 == x == 2):
+            plantResponses.append(' ')
+            x+=1
+            continue
+        if response.lower() == 'q' or response.lower() == 'quit':
+            x=99
+            active=False
+            if len(plantResponses)<6:return [False]#this should also quit out of the main calling function, used to be achieved by the active=False above
+            continue
+        #0-2 non null, 1 4 5 6 int, 2 single VARCHAR, 1 not more than the number of spots
+        if (x<=2 and response==''):
+            print("Please enter a value, this is a non null entry")
+            continue
+        if (x==1 or 4<=x<=6 and response != ''):
+            try:
+                int(response)
+            except:
+                print("Please enter an integer for this value")
+                continue
+        if (x==1 and int(response)>int(appSettings['Spots Available'])):
+            print("Plant placement over number of available spots, please add more spots or addjust")
+            continue
+        if (x==2):
+            try:
+                int(response)
+                print("Please enter an alphabetic character for the modifier")
+                continue
+            except:
+                pass
+            finally:
+                if(len(response)>1):
+                    print("This value should only be one letter long")
+                    continue
+            
+        plantResponses.append(response)
+        x+=1
+    #print(plantResponses)
+    return plantResponses
+
+def clear_table(tableToClear:str):
+    dbConnect("reset table")
+    sqlCursor.execute("DELETE FROM " + tableToClear)
+    conn.commit()
+    dbDisconnect('reset table')
+
+def get_and_check_plant_pk(): #get this integrated into adjust and delete
+    response = input("Which plant to modify (select using spot+modifier like 1a or 12b)\n>>")
+    if (response.lower()=='q' or response.lower()=='quit'):return [False]
+    plantPlacement = [response[:-1], response[-1]]
+    # placementModifier = response[-1]
+    # placement = response[:-1]
+    dbConnect("Adjusting plant + check -- " + plantPlacement[0] + plantPlacement[1])
+    sqlCursor.execute(f"SELECT * FROM Plants WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'")
+    values = sqlCursor.fetchall()
+    if values == []:
+        print("Please enter a real placement + modifier")
+        dbDisconnect("wrong adjustment request--" + plantPlacement[0] + plantPlacement[1])
+        return ['noListing']
+    return plantPlacement
+
+def plant_settings(): #DONE add sql calls to plant settings
+#DONE add a check to make sure that plants are not added to spots above "spots avaialable" found in the user presets file
     for plant in plantListList:
         print(plant)
     print("Do you want to add, adjust, or delete plants in the list?")
     match input(">>"):
+
         case 'add': 
             active=True
             while(active):
-                plantResponses.clear()
-                x=0
-                print("enter q to quit at any time")
-                while(x<len(plantFieldnames)):# lol while(while)? maybe a better way here, a goto command would be great
-                    response = input(plantFieldnames[x] + "?\n>>")
-                    if response.lower() == 'q' or response.lower() == 'quit':
-                        x=99
-                        active=False
-                        if len(plantResponses)<6:return
-                        continue
-                    #0-2 non null, 1 4 5 6 int, 2 single VARCHAR, 1 not more than the number of spots
-                    if (x<=2 and response==''):
-                        print("Please enter a value, this is a non null entry")
-                        continue
-                    if (x==1 or 4<=x<=6 and response != ''):
-                        try:
-                            int(response)
-                        except:
-                            print("Please enter an integer for this value")
-                            continue
-                    if (x==1 and int(response)>int(appSettings['Spots Available'])):
-                        print("Plant placement over number of available spots, please add more spots or addjust")
-                        continue
-                    if (x==2):
-                        try:
-                            int(response)
-                            print("Please enter an alphabetic character for the modifier")
-                            continue
-                        except:
-                            pass
-                        finally:
-                            if(len(response)>1):
-                                print("This value should only be one letter long")
-                                continue
-                        
-                    plantResponses.append(response)
-                    x+=1
-                print(plantResponses)
+                dbp.connect_to_DB(databaseFile)
+                dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
+                #dbp.fancy_print_table('Plants')
+                dbp.connect_to_DB()
+
+                plantResponses = get_plant_input('add')
+                if plantResponses == [False]:
+                    active = False
+                    return
                 dbConnect("Adding a plant")
                 statement = f"""
 INSERT INTO Plants (PlantName, Placement, PlacementModifier, PotStyle, Moisture, Temperature, Humidity)
@@ -408,108 +460,113 @@ VALUES('{plantResponses[0]}', {plantResponses[1]}, '{plantResponses[2]}', '{plan
                     if(response !='y' and response !='yes'):
                         active=False
                 except sqlite3.IntegrityError:
-                    print("That unique key (name, spot, modifier) already exists. These values together must be unique")
+                    print("That unique key (spot, modifier) already exists. These values together must be unique")
                     dbDisconnect("Failed at adding a plant")
             #0'Plant Name', 1'Placement(int)', 2'Placement Modifier(a, b, c, etc)', 3'Pot Style', 4'Moisture(int)', 5'Temperature(int)', 6'Humidity(int)'
     
-        case 'adjust'|'adj': #FIXME WORKING adjust plant 
+        case 'adjust'|'adj': 
             #this function is dangerous to time management - this would likely be the sole cause to move to SQL for larger numbers of plants
             active=True
             while active:
-                pull_plant_list()
-                count=0
-                for plant in plantListList:
-                    print(str(count) + '--' + str(plant))
-                    count+=1
-                plantToModify = input("Which plant do you want to adjust?\n>>")
-                if plantToModify == 'q' or plantToModify == 'quit':
-                        active=False
-                        return
-                try:
-                    len(plantToModify)
-                except:
-                    logging.warning("Attempted to enter a non int non quit value to adjust plants, entry " + plantToModify + ", continuing")
-                    continue
-                if plantToModify == 0:print("please do not attempt to adjust the column names");continue
-                for item in plantFieldnames:
-                    userResponse = input(item + "?\n>>")
-                    if userResponse == 'q' or userResponse == 'quit':
-                        active=False
-                        if len(plantResponses)<6:return
-                        break
-                    plantResponses.append(userResponse)
-                logging.debug(str(plantListList[int(plantToModify)]) + " adjusted to " + str(plantResponses))
-                print(plantResponses)
-                # input("press any key to continue")
-                # for plant in plantListList:
-                #     print(plant)
-                # input("press any key to continue")
-                plantListList[int(plantToModify)] = plantResponses
-                # for plant in plantListList:
-                #     print(plant)
-                with open(plantsFile, 'w', newline='') as csvfile: #FIXME plants file csv to sql 2
-                    plantOverwriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-                    plantOverwriter.writeheader
-                for row in plantListList:
-                    with open(plantsFile, 'a', newline='') as csvfile:
-                        plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-                        plantWriter.writerow({'Plant':row[0], 'Placement':row[1], 
-                        'Pot Style':row[2],'Moisture':row[3], 
-                        'Temperature':row[4], 'Humidity':row[5]})
-                    # print({'Plant':row[0], 'Placement':row[1], 
-                    #     'Pot Style':row[2],'Moisture':row[3], 
-                    #     'Temperature':row[4], 'Humidity':row[5]})
+                dbp.connect_to_DB(databaseFile)
+                dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
+                #dbp.fancy_print_table('Plants')
+                dbp.connect_to_DB()
+                plantPlacement = get_and_check_plant_pk()
+                if plantPlacement == [False]:return
+                elif plantPlacement == ['noListing']:continue
+                # dbp.connect_to_DB(databaseFile)
+                # dbp.fancy_print_table('Plants')
+                # dbp.connect_to_DB()
+                
+                # response = input("Which plant to modify (select using spot+modifier like 1a or 12b)\n>>")
+                # if (response.lower()=='q' or response.lower()=='quit'):return
+                # placementModifier = response[-1]
+                # placement = response[:-1]
+                # dbConnect("Adjusting plant + check -- " + placement + placementModifier)
+                # sqlCursor.execute(f"SELECT * FROM Plants WHERE Placement={placement} AND PlacementModifier='{placementModifier}'")
+                # values = sqlCursor.fetchall()
+                # if values == []:
+                #     print("Please enter a real placement + modifier")
+                #     dbDisconnect("wrong adjustment request--" + placement + placementModifier)
+                #     continue
+                print("What do you want this plant changed to?")
+                plantResponses = get_plant_input('adj')
+                if plantResponses == [False]:
+                    active = False
+                    dbDisconnect("requesting to quit plant adjust")
+                    return
+                
+                sqlAdjustStatement = f"""
+UPDATE Plants
+SET PlantName='{plantResponses[0]}', PotStyle='{plantResponses[3]}', Moisture='{plantResponses[4]}', Temperature='{plantResponses[5]}', Humidity='{plantResponses[6]}'
+WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'
+"""
+                try: #Keeping this try block in for now, the earlier try block shoiuld catch all incorrect inputs but just in case
+                    sqlCursor.execute(sqlAdjustStatement)
+                    conn.commit()
+                    dbDisconnect("Adjusting plant" + plantPlacement[0] + plantPlacement[1])
+                except sqlite3.OperationalError:
+                    print("Please enter a real placement + modifier")
+                    dbDisconnect("wrong adjustment request" + plantPlacement[0] + plantPlacement[1])
+
             #0'Plant Name', 1'Placement(int)', 2'Placement Modifier(a, b, c, etc)', 3'Pot Style', 4'Moisture(int)', 5'Temperature(int)', 6'Humidity(int)'
-                        print("Plants adjusted")
-                plantResponses.clear()
-            
-            return print("plants adjusted") #overwrite whole file with adjusted information
+            return print("plants adjusted") 
         
-        case 'delete'|'del'|'d': 
+        case 'delete'|'del'|'d':
             active=True
             while active:
-                dbp.connectToDB(databaseFile)
-                dbp.fancyPrintTable("Plants")
-                dbp.disconnectToDB()
-                count=0
-                for plant in plantListList:
-                    print(str(count) + '--' + str(plant))
-                    count+=1
-                plantToModify = input("Which plant do you want to delete?\n>>")
-                if plantToModify == 'q' or plantToModify == 'quit':
-                        active=False
-                        return
-                try:
-                    len(plantToModify)
-                except:
-                    logging.warning("Attempted to enter a non int non quit value to delete plants, entry " + plantToModify + ", continuing")
-                    continue
-                if plantToModify == 0:print("please do not attempt to remove the column names");continue
-                logging.debug(str(plantListList[int(plantToModify)]) + " deleted")
-                plantListList.pop(int(plantToModify))
-                with open(plantsFile, 'w', newline='') as csvfile: #FIXME plants file csv to sql 3
-                        plantOverwriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-                        plantOverwriter.writeheader
-                for row in plantListList:
-                        with open(plantsFile, 'a', newline='') as csvfile: #FIXME plants file csv to sql 4
-                            plantWriter = csv.DictWriter(csvfile, fieldnames=plantFieldnames)
-                            plantWriter.writerow({'Plant':row[0], 'Placement':row[1], 
-                            'Pot Style':row[2],'Moisture':row[3], 
-                            'Temperature':row[4], 'Humidity':row[5]})
-                plantResponses.clear()
+                dbp.connect_to_DB(databaseFile)
+                dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
+                #dbp.fancy_print_table('Plants')
+                dbp.connect_to_DB()
+
+                print("Delete the whole list or individual plants?")
+                response = input(">>").lower() # trying out a freeform answer here
+                if (response.lower()=='q' or response.lower()=='quit'):return
+                if ('list' in response or 'all' in response):
+                    print("list found, confirm delete whole list")
+                    response = input(">>").lower()
+                    if (response=='y' or response=='yes' or 'firm' in response):
+                        clear_table('Plants')
+                elif('indiv' in response or 'plant' in response):
+                    print("individual plants found")
+
+                    plantPlacement = get_and_check_plant_pk()
+                    if plantPlacement == [False]:return
+                    elif plantPlacement == ['noListing']:continue
+                    # response = input("Which plant to modify (select using spot+modifier like 1a or 12b)\n>>")
+                    # if (response.lower()=='q' or response.lower()=='quit'):return
+                    # placementModifier = response[-1]
+                    # placement = response[:-1]
+                    # dbConnect("Deleting plant + check -- " + placement + placementModifier)
+                    # sqlCursor.execute(f"SELECT * FROM Plants WHERE Placement={placement} AND PlacementModifier='{placementModifier}'") #This is not returning an error value here - duh cause will return empty list, issue is present in adjust as well
+                    # values = sqlCursor.fetchall()
+                    # if values == []:
+                    #     print("Please enter a real placement + modifier")
+                    #     dbDisconnect("wrong adjustment request--" + placement + placementModifier)
+                    #     continue
+                    sqlDeleteStatement = f"""
+DELETE FROM Plants
+WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'
+"""
+                    #dbConnect("Deleting item from plants -- " + placement + placementModifier)
+                    sqlCursor.execute(sqlDeleteStatement)
+                    conn.commit()
+                    dbDisconnect("Deleted item -- " + plantPlacement[0] + plantPlacement[1])   
+
+                else:
+                    return                 
 
         case default:
             return
     
 
-def pull_plant_list(): #FIXME sql call to pull plant list
+def pull_plant_list(): #DONE sql call to pull plant list
     #Do we need this anymore? everyting can be directly modified with a sql statement
+    #No this is not needed
     pass
-    # plantListList.clear()
-    # with open(plantsFile, 'r', newline='') as csvfile:
-    #     reader = csv.reader(csvfile)
-    #     for row in reader:
-    #         plantListList.append(row)
+
 
 def pull_user_prefrences(): #DONE sql call to pull user settings
     #   only pull pertanent information like the appSettings dict, maybe the name
@@ -520,7 +577,7 @@ def pull_user_prefrences(): #DONE sql call to pull user settings
     dbConnect("pulling app settings")
 
     sqlCursor.execute("SELECT * FROM User_Settings")
-    settingsPull = sqlCursor.fetchall() #need to add user data to test this
+    settingsPull = sqlCursor.fetchall() 
     if settingsPull == []:appSettings['Filled Out'] = False
     else:appSettings['Filled Out'] = True;print("user settings loaded")
     appSettings['Spots Available'] = settingsPull[0][1]
@@ -604,9 +661,7 @@ print(introText)
 logging.info("starting program")
 dbConnect("startup")
 dbDisconnect("startup")
-#dbPrint()
 file_check()
-pull_plant_list()
 pull_user_prefrences()
 #print(appSettings)
 # for row in plantListList:
