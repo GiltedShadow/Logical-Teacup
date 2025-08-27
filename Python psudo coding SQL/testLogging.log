@@ -2421,3 +2421,233 @@ INFO:root:plantList.csv found
 2025-08-25 20:19:41,209 DEBUG db disconnection called - code - checking for tables
 2025-08-25 20:19:41,209 DEBUG db connection called - code - pulling app settings
 2025-08-25 20:19:41,209 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 16:59:02,335 INFO starting program
+2025-08-26 16:59:02,335 DEBUG db connection called - code - startup
+2025-08-26 16:59:02,335 INFO db connected to test.db
+2025-08-26 16:59:02,335 DEBUG db disconnection called - code - startup
+2025-08-26 16:59:02,335 INFO test.db found
+2025-08-26 16:59:02,335 DEBUG checking for tables
+2025-08-26 16:59:02,335 DEBUG db connection called - code - checking for tables
+2025-08-26 16:59:02,335 DEBUG Checking SELECT * FROM Plants
+2025-08-26 16:59:02,335 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 16:59:02,336 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 16:59:02,336 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 16:59:02,336 DEBUG All tables accounted for
+2025-08-26 16:59:02,336 DEBUG db disconnection called - code - checking for tables
+2025-08-26 16:59:02,336 DEBUG db connection called - code - pulling app settings
+2025-08-26 16:59:02,336 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 16:59:10,580 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 16:59:10,582 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 17:18:30,776 INFO starting program
+2025-08-26 17:18:30,776 DEBUG db connection called - code - startup
+2025-08-26 17:18:30,776 INFO db connected to test.db
+2025-08-26 17:18:30,776 DEBUG db disconnection called - code - startup
+2025-08-26 17:18:30,776 INFO test.db found
+2025-08-26 17:18:30,776 DEBUG checking for tables
+2025-08-26 17:18:30,776 DEBUG db connection called - code - checking for tables
+2025-08-26 17:18:30,776 DEBUG Checking SELECT * FROM Plants
+2025-08-26 17:18:30,776 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 17:18:30,777 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 17:18:30,777 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 17:18:30,777 DEBUG All tables accounted for
+2025-08-26 17:18:30,777 DEBUG db disconnection called - code - checking for tables
+2025-08-26 17:18:30,777 DEBUG db connection called - code - pulling app settings
+2025-08-26 17:18:30,777 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 17:18:43,987 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 17:18:43,988 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 17:46:03,153 INFO starting program
+2025-08-26 17:46:03,153 DEBUG db connection called - code - startup
+2025-08-26 17:46:03,153 INFO db connected to test.db
+2025-08-26 17:46:03,153 DEBUG db disconnection called - code - startup
+2025-08-26 17:46:03,153 INFO test.db found
+2025-08-26 17:46:03,153 DEBUG checking for tables
+2025-08-26 17:46:03,153 DEBUG db connection called - code - checking for tables
+2025-08-26 17:46:03,153 DEBUG Checking SELECT * FROM Plants
+2025-08-26 17:46:03,154 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 17:46:03,154 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 17:46:03,154 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 17:46:03,154 DEBUG All tables accounted for
+2025-08-26 17:46:03,154 DEBUG db disconnection called - code - checking for tables
+2025-08-26 17:46:03,154 DEBUG db connection called - code - pulling app settings
+2025-08-26 17:46:03,154 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 17:46:09,248 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 17:46:09,249 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 17:55:35,895 INFO starting program
+2025-08-26 17:55:35,895 DEBUG db connection called - code - startup
+2025-08-26 17:55:35,896 INFO db connected to test.db
+2025-08-26 17:55:35,896 DEBUG db disconnection called - code - startup
+2025-08-26 17:55:35,896 INFO test.db found
+2025-08-26 17:55:35,896 DEBUG checking for tables
+2025-08-26 17:55:35,896 DEBUG db connection called - code - checking for tables
+2025-08-26 17:55:35,896 DEBUG Checking SELECT * FROM Plants
+2025-08-26 17:55:35,896 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 17:55:35,896 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 17:55:35,896 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 17:55:35,896 DEBUG All tables accounted for
+2025-08-26 17:55:35,896 DEBUG db disconnection called - code - checking for tables
+2025-08-26 17:55:35,896 DEBUG db connection called - code - pulling app settings
+2025-08-26 17:55:35,896 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 17:55:38,050 DEBUG db connection called - code - reset table Plant_Working_Information
+2025-08-26 17:55:38,071 DEBUG db disconnection called - code - reset table
+2025-08-26 17:55:40,428 INFO user closing program
+2025-08-26 18:08:25,899 INFO user closing program
+2025-08-26 18:49:15,267 INFO starting program
+2025-08-26 18:49:15,267 DEBUG db connection called - code - startup
+2025-08-26 18:49:15,267 INFO db connected to test.db
+2025-08-26 18:49:15,267 DEBUG db disconnection called - code - startup
+2025-08-26 18:49:15,267 INFO test.db found
+2025-08-26 18:49:15,267 DEBUG checking for tables
+2025-08-26 18:49:15,267 DEBUG db connection called - code - checking for tables
+2025-08-26 18:49:15,267 DEBUG Checking SELECT * FROM Plants
+2025-08-26 18:49:15,267 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 18:49:15,267 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 18:49:15,267 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 18:49:15,267 DEBUG All tables accounted for
+2025-08-26 18:49:15,268 DEBUG db disconnection called - code - checking for tables
+2025-08-26 18:49:15,268 DEBUG db connection called - code - pulling app settings
+2025-08-26 18:49:15,268 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 18:49:50,925 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 18:49:50,926 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 18:49:55,833 DEBUG db connection called - code - take moisture
+2025-08-26 18:50:34,392 INFO starting program
+2025-08-26 18:50:34,392 DEBUG db connection called - code - startup
+2025-08-26 18:50:34,392 INFO db connected to test.db
+2025-08-26 18:50:34,392 DEBUG db disconnection called - code - startup
+2025-08-26 18:50:34,392 INFO test.db found
+2025-08-26 18:50:34,392 DEBUG checking for tables
+2025-08-26 18:50:34,392 DEBUG db connection called - code - checking for tables
+2025-08-26 18:50:34,392 DEBUG Checking SELECT * FROM Plants
+2025-08-26 18:50:34,392 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 18:50:34,392 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 18:50:34,392 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 18:50:34,392 DEBUG All tables accounted for
+2025-08-26 18:50:34,392 DEBUG db disconnection called - code - checking for tables
+2025-08-26 18:50:34,392 DEBUG db connection called - code - pulling app settings
+2025-08-26 18:50:34,393 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 18:50:53,720 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 18:50:53,722 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 18:50:55,799 DEBUG db connection called - code - take moisture
+2025-08-26 18:51:33,624 INFO starting program
+2025-08-26 18:51:33,624 DEBUG db connection called - code - startup
+2025-08-26 18:51:33,625 INFO db connected to test.db
+2025-08-26 18:51:33,625 DEBUG db disconnection called - code - startup
+2025-08-26 18:51:33,625 INFO test.db found
+2025-08-26 18:51:33,625 DEBUG checking for tables
+2025-08-26 18:51:33,625 DEBUG db connection called - code - checking for tables
+2025-08-26 18:51:33,625 DEBUG Checking SELECT * FROM Plants
+2025-08-26 18:51:33,625 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 18:51:33,625 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 18:51:33,625 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 18:51:33,625 DEBUG All tables accounted for
+2025-08-26 18:51:33,625 DEBUG db disconnection called - code - checking for tables
+2025-08-26 18:51:33,625 DEBUG db connection called - code - pulling app settings
+2025-08-26 18:51:33,625 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 18:51:41,174 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 18:51:41,175 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 18:51:41,871 DEBUG db connection called - code - take moisture
+2025-08-26 18:52:13,231 INFO user closing program
+2025-08-26 18:53:00,621 INFO starting program
+2025-08-26 18:53:00,622 DEBUG db connection called - code - startup
+2025-08-26 18:53:00,622 INFO db connected to test.db
+2025-08-26 18:53:00,622 DEBUG db disconnection called - code - startup
+2025-08-26 18:53:00,622 INFO test.db found
+2025-08-26 18:53:00,622 DEBUG checking for tables
+2025-08-26 18:53:00,622 DEBUG db connection called - code - checking for tables
+2025-08-26 18:53:00,622 DEBUG Checking SELECT * FROM Plants
+2025-08-26 18:53:00,622 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 18:53:00,622 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 18:53:00,622 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 18:53:00,622 DEBUG All tables accounted for
+2025-08-26 18:53:00,622 DEBUG db disconnection called - code - checking for tables
+2025-08-26 18:53:00,622 DEBUG db connection called - code - pulling app settings
+2025-08-26 18:53:00,622 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 18:53:09,022 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 18:53:09,023 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 18:53:11,008 DEBUG db connection called - code - take moisture
+2025-08-26 18:55:04,841 INFO starting program
+2025-08-26 18:55:04,841 DEBUG db connection called - code - startup
+2025-08-26 18:55:04,841 INFO db connected to test.db
+2025-08-26 18:55:04,841 DEBUG db disconnection called - code - startup
+2025-08-26 18:55:04,841 INFO test.db found
+2025-08-26 18:55:04,841 DEBUG checking for tables
+2025-08-26 18:55:04,841 DEBUG db connection called - code - checking for tables
+2025-08-26 18:55:04,841 DEBUG Checking SELECT * FROM Plants
+2025-08-26 18:55:04,842 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 18:55:04,842 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 18:55:04,842 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 18:55:04,842 DEBUG All tables accounted for
+2025-08-26 18:55:04,842 DEBUG db disconnection called - code - checking for tables
+2025-08-26 18:55:04,842 DEBUG db connection called - code - pulling app settings
+2025-08-26 18:55:04,842 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 18:55:09,401 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 18:55:09,403 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 18:55:10,061 DEBUG db connection called - code - take moisture
+2025-08-26 18:57:48,183 INFO starting program
+2025-08-26 18:57:48,183 DEBUG db connection called - code - startup
+2025-08-26 18:57:48,184 INFO db connected to test.db
+2025-08-26 18:57:48,184 DEBUG db disconnection called - code - startup
+2025-08-26 18:57:48,184 INFO test.db found
+2025-08-26 18:57:48,184 DEBUG checking for tables
+2025-08-26 18:57:48,184 DEBUG db connection called - code - checking for tables
+2025-08-26 18:57:48,184 DEBUG Checking SELECT * FROM Plants
+2025-08-26 18:57:48,184 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 18:57:48,184 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 18:57:48,184 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 18:57:48,184 DEBUG All tables accounted for
+2025-08-26 18:57:48,184 DEBUG db disconnection called - code - checking for tables
+2025-08-26 18:57:48,184 DEBUG db connection called - code - pulling app settings
+2025-08-26 18:57:48,184 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 18:57:53,452 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 18:57:53,453 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 18:57:54,117 DEBUG db connection called - code - take moisture
+2025-08-26 19:00:10,666 INFO starting program
+2025-08-26 19:00:10,666 DEBUG db connection called - code - startup
+2025-08-26 19:00:10,667 INFO db connected to test.db
+2025-08-26 19:00:10,667 DEBUG db disconnection called - code - startup
+2025-08-26 19:00:10,667 INFO test.db found
+2025-08-26 19:00:10,667 DEBUG checking for tables
+2025-08-26 19:00:10,667 DEBUG db connection called - code - checking for tables
+2025-08-26 19:00:10,667 DEBUG Checking SELECT * FROM Plants
+2025-08-26 19:00:10,667 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 19:00:10,667 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 19:00:10,667 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 19:00:10,667 DEBUG All tables accounted for
+2025-08-26 19:00:10,667 DEBUG db disconnection called - code - checking for tables
+2025-08-26 19:00:10,667 DEBUG db connection called - code - pulling app settings
+2025-08-26 19:00:10,667 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 19:00:14,184 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 19:00:14,185 DEBUG db disconnection called - code - Pulling plant spots
+2025-08-26 19:00:16,131 DEBUG db connection called - code - take moisture
+2025-08-26 19:03:01,267 INFO starting program
+2025-08-26 19:03:01,267 DEBUG db connection called - code - startup
+2025-08-26 19:03:01,267 INFO db connected to test.db
+2025-08-26 19:03:01,267 DEBUG db disconnection called - code - startup
+2025-08-26 19:03:01,267 INFO test.db found
+2025-08-26 19:03:01,267 DEBUG checking for tables
+2025-08-26 19:03:01,267 DEBUG db connection called - code - checking for tables
+2025-08-26 19:03:01,267 DEBUG Checking SELECT * FROM Plants
+2025-08-26 19:03:01,268 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 19:03:01,268 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 19:03:01,268 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 19:03:01,268 DEBUG All tables accounted for
+2025-08-26 19:03:01,268 DEBUG db disconnection called - code - checking for tables
+2025-08-26 19:03:01,268 DEBUG db connection called - code - pulling app settings
+2025-08-26 19:03:01,268 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 19:03:01,268 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 19:03:18,419 INFO starting program
+2025-08-26 19:03:18,419 DEBUG db connection called - code - startup
+2025-08-26 19:03:18,419 INFO db connected to test.db
+2025-08-26 19:03:18,419 DEBUG db disconnection called - code - startup
+2025-08-26 19:03:18,419 INFO test.db found
+2025-08-26 19:03:18,419 DEBUG checking for tables
+2025-08-26 19:03:18,419 DEBUG db connection called - code - checking for tables
+2025-08-26 19:03:18,419 DEBUG Checking SELECT * FROM Plants
+2025-08-26 19:03:18,419 DEBUG Checking SELECT * FROM User_Settings
+2025-08-26 19:03:18,419 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-08-26 19:03:18,419 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-08-26 19:03:18,419 DEBUG All tables accounted for
+2025-08-26 19:03:18,419 DEBUG db disconnection called - code - checking for tables
+2025-08-26 19:03:18,420 DEBUG db connection called - code - pulling app settings
+2025-08-26 19:03:18,420 DEBUG db disconnection called - code - Pulling app settings
+2025-08-26 19:03:18,420 DEBUG db connection called - code - Pulling plant spots
+2025-08-26 19:03:18,420 DEBUG db disconnection called - code - Pulling plant spots

@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS User_Settings(
 sqlStatementCreateWorkingPlantTable = """
 CREATE TABLE IF NOT EXISTS Plant_Working_Information(
     Placement INTEGER NOT NULL,
-    PlacementModifier INTEGER NOT NULL,
+    PlacementModifier VARCAHR NOT NULL,
     TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     MoistureReading INTEGER,
     WateringTimer INTEGER,
@@ -188,7 +188,7 @@ def userInterface(userInput):
         case 'plants'|'plant'|'p':
             return plant_settings()
         case 'admin'|'a':
-            return whoops() #TODO log in for admin to cause time to pass and check logic functions
+            return admin_log_in() #whoops() #DONE log in for admin to cause time to pass and check logic functions
         case 'dbprint'|'db':
             return db_print()
         case 'rt': #TODO move to deleting table or another function
@@ -224,24 +224,24 @@ def db_print():
             case '1':
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_database()
-                dbp.connect_to_DB
+                dbp.disconnect_from_DB()
             case '2':
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
                 #dbp.fancy_print_table('Plants')
-                dbp.connect_to_DB
+                dbp.disconnect_from_DB()
             case '3':
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_table('User_Settings')
-                dbp.connect_to_DB
+                dbp.disconnect_from_DB()
             case '4':
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_table('Plant_Working_Information')
-                dbp.connect_to_DB
+                dbp.disconnect_from_DB()
             case '5':
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_table('Air_Conditioning_Working_Information')
-                dbp.connect_to_DB
+                dbp.disconnect_from_DB()
             case default:
                 active = False
                 return
@@ -266,7 +266,7 @@ def help_text():
     print("""
 While in any specific area q or quit should allow you to return to the main menu
 help ------- list commands
-version ---- will print out the file version
+version ---- will print out the file versionpalce
 file check - will search for files and will create them if not found
 settings --- checks current user preferences and sets them
 plants ----- checks current plant list and allows new/ changed entries
@@ -284,9 +284,10 @@ def power_down():
 
 def create_all_tables():
     #Am i stupid? these need to be run together
+    # SQLite is funny where it can only take one statement at a time, so any ; should be followed by the end of the statement and 
     #runs the creation of the table if not found within databaseFile
     #DONE SQL CREATE TABLE IF NOT EXISTS #DONE confirm sql table creation works
-    #dbConnect("creating tables")
+    #dbConnect("creating tables") # No longer needed as db open call is outside of this function
     sqlCursor.execute(sqlStatementCreatePlantTable)
     logging.debug("plant table created")
     sqlCursor.execute(sqlStatementCreateUserTable)
@@ -441,7 +442,7 @@ def plant_settings(): #DONE add sql calls to plant settings
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
                 #dbp.fancy_print_table('Plants')
-                dbp.connect_to_DB()
+                dbp.disconnect_from_DB()
 
                 plantResponses = get_plant_input('add')
                 if plantResponses == [False]:
@@ -471,7 +472,7 @@ VALUES('{plantResponses[0]}', {plantResponses[1]}, '{plantResponses[2]}', '{plan
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
                 #dbp.fancy_print_table('Plants')
-                dbp.connect_to_DB()
+                dbp.disconnect_from_DB()
                 plantPlacement = get_and_check_plant_pk()
                 if plantPlacement == [False]:return
                 elif plantPlacement == ['noListing']:continue
@@ -519,7 +520,7 @@ WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
                 #dbp.fancy_print_table('Plants')
-                dbp.connect_to_DB()
+                dbp.disconnect_from_DB()
 
                 print("Delete the whole list or individual plants?")
                 response = input(">>").lower() # trying out a freeform answer here
@@ -611,16 +612,98 @@ def pull_user_prefrences(): #DONE sql call to pull user settings
 #TODO take measurements with moisture sensor, water based on a table, log based on plant spot vs moisture at time of watering
 #TODO take measurements with moisture sendor, off of the watering schedule to check against drainage, if moisture reads around the requested amount it gets a carrot
 #   this should be in between the waterings and should assist with the watering schedule and amount
+# When watering long pots, the controls should be connected, eg 1a and 2a should get the same amount of water - this can be changed later but will allow a much easier build when put along side the averaging of the long pots
 plantSpotsTurnedOn = []
 
+sensorsConnected = False
+
+sqlStatementPullPlantPlacements = "SELECT Placement, PlacementModifier FROM Plants"
+
+adminHelp = """
+"""
+
+def admin_log_in():
+    passResponse = input("Enter Password\n>>")
+    if passResponse != 'pass':return #TODO add a real password/ security service here
+    
+    while True:
+        adminResponse = input("Admin menu\n>>")
+        match adminResponse:
+            case 's'|'spot'|'spots':
+                turn_on_off_spots()
+            case 'm'|'moisture'|'tm':
+                take_moisture()
+            case 'w'|'water':
+                water_plants()
+            case 'a'|'adjust':
+                adjust_water()
+            case default:
+                print("Exit admin?")
+                eResponse = input(">>").lower()
+                if ('y' in eResponse):
+                    break
+        
+
 def turn_on_off_spots():
-    #TODO pull plant spots from plant CSV
+    #DONE pull plant spots from plant -CSV- SQL
+    dbConnect("Pulling plant spots")
+    sqlCursor.execute(sqlStatementPullPlantPlacements)
+    placementData = sqlCursor.fetchall()
+    for place, modifier in placementData:
+        plantSpotsTurnedOn.append(str(place) + modifier)
+        #print(str(place) + modifier)
+    print("Spots detected -- " + str(plantSpotsTurnedOn))
+    dbDisconnect("Pulling plant spots")
     pass
 
 def take_moisture():
     #TODO function to take moisture measurements
     # This needs to search for moisture sensors, or for lack of sensors (mostly for this code or for when users do not have them) assume a specific loss based on plant spots
     # this needs to average long pots to one value over multiple sensors with error checing and checks to see if one spot's watering spout is encountering an issue
+    previousMoistureReadings = []
+    previousMoistureReadingsDict = {}
+
+    if not sensorsConnected:
+        #testing code, assume sensors will be connected later
+        #assume moisture will measure 0-100, this is very much in a sterile environment and will #TODO need another look after physical trials
+        #assume the same amount of time and random moisture loss each time the take_moisture function is ran
+        #if previous moisture measurement is not available, set to 0 #DONE ONE
+        #each run assume ~8 hours past, random moisture loss of 5-25 #TODO TWO kinda need watering working to test next 2
+        #if after a watering, add (random moiture 5-10) times however long the watering cycle is per 10 sec #TODO THREE
+        #   so if watering for 30 secongs, (random5-10)x3
+        #TODO !!MAJOR!! figure out a way to pass the dict for immediate moisture readings while keeping the functionality of reducint moisture when run on its own 
+        # To save space, if the place is removed from the turned on spots, it will be deleted from the db #TODO revist after physical trails
+        dbConnect("take moisture")
+        for plant in plantSpotsTurnedOn:
+            sqlCursor.execute(f"SELECT MoistureReading FROM Plant_Working_Information WHERE Placement={plant[:-1]} and PlacementModifier='{plant[-1]}' ORDER BY TimeTaken DESC") #TODO test this specific statement intensively, need to afirm that it is taking the most recent measurement
+            moistureData = sqlCursor.fetchone()
+            if moistureData != None:
+                for item in moistureData:
+                    previousMoistureReadings.append([plant, item]) #might be an idea to keep it like this for quick reference, maybe a dict
+                    previousMoistureReadingsDict[plant] = item
+                #previousMoistureReadings.append(moistureData)
+            #print(moistureData)
+        print(previousMoistureReadings)
+        print(previousMoistureReadingsDict)
+        if previousMoistureReadings == []:
+            print("new places all around")
+            for plant in plantSpotsTurnedOn:
+                sqlStatementMoistureNull = f"""
+INSERT INTO Plant_Working_Information (Placement, PlacementModifier, MoistureReading, WateringTimer)
+VALUES ({plant[:-1]}, '{plant[-1]}', 0, 0)
+"""
+                
+# Placement INTEGER NOT NULL,
+# PlacementModifier VARCAHR NOT NULL,
+# TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+# MoistureReading INTEGER,
+# WateringTimer INTEGER,
+                sqlCursor.execute(sqlStatementMoistureNull)
+                conn.commit()
+                print("moisture collected for " + plant + "--0")
+
+
+        return
     for plant in plantSpotsTurnedOn:
         print("moisture collected for " + plant)
     pass
@@ -630,6 +713,11 @@ def take_moisture():
 def water_plants():
     #TODO function to use moisture to water
     # this will pull the moisture based on each plant placement (see moisture function) potentially based on history and previous moisture measurements and will water based on time
+    if not sensorsConnected:
+        #testing code, assume sensors will be connected later
+        #if no moisture reading, run watering for 60 sec (for this dryrun water 6 units) #TODO ONE 
+        return
+    print("Plants watered")
     pass
 
 
@@ -637,6 +725,7 @@ def water_plants():
 def adjust_water():
     #TODO function to use moisture to check water
     # this will pull moisture (see moisture function) and the previous water amount (see water function) to adjust if the time needs to be increased or decreased
+    print("Water adjusted")
     pass
 
 
@@ -663,6 +752,7 @@ dbConnect("startup")
 dbDisconnect("startup")
 file_check()
 pull_user_prefrences()
+turn_on_off_spots()
 #print(appSettings)
 # for row in plantListList:
 #     print(row)
