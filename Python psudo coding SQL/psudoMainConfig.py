@@ -613,6 +613,8 @@ def pull_user_prefrences(): #DONE sql call to pull user settings
 #TODO take measurements with moisture sendor, off of the watering schedule to check against drainage, if moisture reads around the requested amount it gets a carrot
 #   this should be in between the waterings and should assist with the watering schedule and amount
 # When watering long pots, the controls should be connected, eg 1a and 2a should get the same amount of water - this can be changed later but will allow a much easier build when put along side the averaging of the long pots
+import random as random
+
 plantSpotsTurnedOn = []
 
 sensorsConnected = False
@@ -656,13 +658,18 @@ def turn_on_off_spots():
     dbDisconnect("Pulling plant spots")
     pass
 
-def take_moisture():
+def take_moisture(functionCall:int=1):
+    #functionCall will be what process this function will take #This might only be a thing for the testing and building of the logic
+    #   0 will be no time passed, and will only pass the dict
+    #   1 will be a standard time pass and should reduce water
     #TODO function to take moisture measurements
     # This needs to search for moisture sensors, or for lack of sensors (mostly for this code or for when users do not have them) assume a specific loss based on plant spots
     # this needs to average long pots to one value over multiple sensors with error checing and checks to see if one spot's watering spout is encountering an issue
     previousMoistureReadings = []
     previousMoistureReadingsDict = {}
 
+    wateringReadingDics = {}
+    
     if not sensorsConnected:
         #testing code, assume sensors will be connected later
         #assume moisture will measure 0-100, this is very much in a sterile environment and will #TODO need another look after physical trials
@@ -671,11 +678,12 @@ def take_moisture():
         #each run assume ~8 hours past, random moisture loss of 5-25 #TODO TWO kinda need watering working to test next 2
         #if after a watering, add (random moiture 5-10) times however long the watering cycle is per 10 sec #TODO THREE
         #   so if watering for 30 secongs, (random5-10)x3
-        #TODO !!MAJOR!! figure out a way to pass the dict for immediate moisture readings while keeping the functionality of reducint moisture when run on its own 
+        #DONE !!MAJOR!! figure out a way to pass the dict for immediate moisture readings while keeping the functionality of reducint moisture when run on its own 
         # To save space, if the place is removed from the turned on spots, it will be deleted from the db #TODO revist after physical trails
         dbConnect("take moisture")
         for plant in plantSpotsTurnedOn:
             sqlCursor.execute(f"SELECT MoistureReading FROM Plant_Working_Information WHERE Placement={plant[:-1]} and PlacementModifier='{plant[-1]}' ORDER BY TimeTaken DESC") #TODO test this specific statement intensively, need to afirm that it is taking the most recent measurement
+            #TODO WORKING add a watering reading like below to pull watering times in seconds (this will be used to bypass the moisture ticking down and instead add moisture as listed above)
             moistureData = sqlCursor.fetchone()
             if moistureData != None:
                 for item in moistureData:
@@ -692,7 +700,7 @@ def take_moisture():
 INSERT INTO Plant_Working_Information (Placement, PlacementModifier, MoistureReading, WateringTimer)
 VALUES ({plant[:-1]}, '{plant[-1]}', 0, 0)
 """
-                
+
 # Placement INTEGER NOT NULL,
 # PlacementModifier VARCAHR NOT NULL,
 # TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -702,7 +710,7 @@ VALUES ({plant[:-1]}, '{plant[-1]}', 0, 0)
                 conn.commit()
                 print("moisture collected for " + plant + "--0")
 
-
+        if functionCall==0:return previousMoistureReadingsDict
         return
     for plant in plantSpotsTurnedOn:
         print("moisture collected for " + plant)
@@ -711,11 +719,26 @@ VALUES ({plant[:-1]}, '{plant[-1]}', 0, 0)
 
 
 def water_plants():
+    moistureReadings = {}
+    moistureReadings = take_moisture(0)
     #TODO function to use moisture to water
     # this will pull the moisture based on each plant placement (see moisture function) potentially based on history and previous moisture measurements and will water based on time
     if not sensorsConnected:
+        dbConnect("Watering plants")
         #testing code, assume sensors will be connected later
-        #if no moisture reading, run watering for 60 sec (for this dryrun water 6 units) #TODO ONE 
+        #if no moisture reading, run watering for 60 sec (for this dryrun water 6 units) #DONE ONE 
+        for plant in plantSpotsTurnedOn:
+            if moistureReadings.get(plant) == 0:
+                
+                sqlStatementWateringFromZero = f"""
+INSERT INTO Plant_Working_Information (Placement, PlacementModifier, MoistureReading, WateringTimer)
+VALUES ({plant[:-1]}, '{plant[-1]}', 0, 60)"""
+                #print(sqlStatementWateringFromZero)
+                sqlCursor.execute(sqlStatementWateringFromZero)
+                conn.commit()
+            else:
+                print(plant + ' is moist')    
+        dbDisconnect("Watering plants")
         return
     print("Plants watered")
     pass
