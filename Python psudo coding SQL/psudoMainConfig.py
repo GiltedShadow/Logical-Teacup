@@ -283,11 +283,9 @@ def power_down():
         exit()
 
 def create_all_tables():
-    #Am i stupid? these need to be run together
+    #Am i stupid? these -need- *should be* be run together
     # SQLite is funny where it can only take one statement at a time, so any ; should be followed by the end of the statement and 
     #runs the creation of the table if not found within databaseFile
-    #DONE SQL CREATE TABLE IF NOT EXISTS #DONE confirm sql table creation works
-    #dbConnect("creating tables") # No longer needed as db open call is outside of this function
     sqlCursor.execute(sqlStatementCreatePlantTable)
     logging.debug("plant table created")
     sqlCursor.execute(sqlStatementCreateUserTable)
@@ -296,7 +294,6 @@ def create_all_tables():
     logging.debug("working plant table created")
     sqlCursor.execute(sqlStatementCreateAirconTable)
     logging.debug("aircon table created")
-    #dbDisconnect("creating tables")
 
 def file_check():
     try:
@@ -668,7 +665,7 @@ def take_moisture(functionCall:int=1):
     previousMoistureReadings = []
     previousMoistureReadingsDict = {}
 
-    wateringReadingDics = {}
+    wateringReadingDict = {}
     
     if not sensorsConnected:
         #testing code, assume sensors will be connected later
@@ -680,19 +677,35 @@ def take_moisture(functionCall:int=1):
         #   so if watering for 30 secongs, (random5-10)x3
         #DONE !!MAJOR!! figure out a way to pass the dict for immediate moisture readings while keeping the functionality of reducint moisture when run on its own 
         # To save space, if the place is removed from the turned on spots, it will be deleted from the db #TODO revist after physical trails
-        dbConnect("take moisture")
+        dbConnect("take moisture") 
         for plant in plantSpotsTurnedOn:
+            #print("running for "+ str(plant))
             sqlCursor.execute(f"SELECT MoistureReading FROM Plant_Working_Information WHERE Placement={plant[:-1]} and PlacementModifier='{plant[-1]}' ORDER BY TimeTaken DESC") #TODO test this specific statement intensively, need to afirm that it is taking the most recent measurement
-            #TODO WORKING add a watering reading like below to pull watering times in seconds (this will be used to bypass the moisture ticking down and instead add moisture as listed above)
+            #DONE WORKING add a watering reading like below to pull watering times in seconds (this will be used to bypass the moisture ticking down and instead add moisture as listed above)
             moistureData = sqlCursor.fetchone()
+
+            sqlCursor.execute(f"SELECT WateringTimer FROM Plant_Working_Information WHERE Placement={plant[:-1]} and PlacementModifier='{plant[-1]}' ORDER BY TimeTaken DESC") # it may be a good idea to figure out how to add both of these sql statements together to reduce db strain, probably by splitting the data below into separate dicts once functionality is confirmed
+            #splitting them will allow only one pass through each data item, combining them well put 2 numbers each [plant] pass so the for block post 
+            wateringData = sqlCursor.fetchone()
+
             if moistureData != None:
                 for item in moistureData:
+                    #print(str(item))
                     previousMoistureReadings.append([plant, item]) #might be an idea to keep it like this for quick reference, maybe a dict
                     previousMoistureReadingsDict[plant] = item
+
                 #previousMoistureReadings.append(moistureData)
             #print(moistureData)
-        print(previousMoistureReadings)
-        print(previousMoistureReadingsDict)
+            if wateringData != None:
+                for item in wateringData:
+                    wateringReadingDict[plant] = item
+
+            # do the watering thing here
+            # TODO working adjust the moisture for watering based off of watering dict
+            
+
+        print("Moisture readings" + str(previousMoistureReadings))
+        print("Moisture readings dics" + str(previousMoistureReadingsDict))
         if previousMoistureReadings == []:
             print("new places all around")
             for plant in plantSpotsTurnedOn:
@@ -710,7 +723,8 @@ VALUES ({plant[:-1]}, '{plant[-1]}', 0, 0)
                 conn.commit()
                 print("moisture collected for " + plant + "--0")
 
-        if functionCall==0:return previousMoistureReadingsDict
+        if functionCall==0:return previousMoistureReadingsDict #wateringReadingDict # wait no dont pass this, just adjust the moisture reading
+        dbDisconnect("take moisture")
         return
     for plant in plantSpotsTurnedOn:
         print("moisture collected for " + plant)
@@ -721,6 +735,7 @@ VALUES ({plant[:-1]}, '{plant[-1]}', 0, 0)
 def water_plants():
     moistureReadings = {}
     moistureReadings = take_moisture(0)
+    print(moistureReadings)
     #TODO function to use moisture to water
     # this will pull the moisture based on each plant placement (see moisture function) potentially based on history and previous moisture measurements and will water based on time
     if not sensorsConnected:
