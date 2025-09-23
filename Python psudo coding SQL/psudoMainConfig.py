@@ -629,6 +629,12 @@ sensorsConnected = False
 sqlStatementPullPlantPlacements = "SELECT Placement, PlacementModifier FROM Plants"
 
 adminHelp = """
+help|h ------- list commands
+adjust|a ----- checks current plant list and allows new/ changed entries
+moisture|m --- will search for files and will create them if not found
+spots|s ------ will print out the file versionpalce
+water|w ------ checks current user preferences and sets them
+exit --------- print out the database or specified table
 """
 
 def admin_log_in():
@@ -646,6 +652,8 @@ def admin_log_in():
                 water_plants()
             case 'a'|'adjust':
                 adjust_water()
+            case 'h'|'help':
+                print(adminHelp)
             case default:
                 print("Exit admin?")
                 eResponse = input(">>").lower()
@@ -668,6 +676,10 @@ def turn_on_off_spots():
     pass
 
 def take_moisture(functionCall:int=1):
+    ### Should this be spit? 
+    # -take_moisture() pull moisture and pass it where needed
+    # -adjust_moisture() will adjust moisture based off of watering time or drop moisture by 8hrs
+    
     #functionCall will be what process this function will take #This might only be a thing for the testing and building of the logic
     #   0 will be no time passed, and will only pass the dict
     #   1 will be a standard time pass and should reduce water
@@ -683,9 +695,9 @@ def take_moisture(functionCall:int=1):
         #testing code, assume sensors will be connected later
         #assume moisture will measure 0-100, this is very much in a sterile environment and will #TODO revist after physical trails
         #assume the same amount of time and random moisture loss each time the take_moisture function is ran
-        #if previous moisture measurement is not available, set to 0 #DONE ONE
+        #if previous moisture measurement is not available, set to 0 
         #each run assume ~8 hours past, random moisture loss of 5-25 #TODO ONE WORKING kinda need watering working to test next 2
-        #if after a watering, add (random moiture 5-10) times however long the watering cycle is per 10 sec #DONE THREE WORKING by proxy
+        #if after a watering, add (random moiture 5-10) times however long the watering cycle is per 10 sec 
         #   so if watering for 30 secongs, (random5-10)x3
         #DONE !!MAJOR!! figure out a way to pass the dict for immediate moisture readings while keeping the functionality of reducint moisture when run on its own 
         # To save space, if the place is removed from the turned on spots, it will be deleted from the db #TODO revist after physical trails
@@ -734,7 +746,6 @@ VALUES ({plant[:-1]}, '{plant[-1]}', {amountToWater}, 0)"""
                         conn.commit()
 
 
-            # do the watering thing here
             # DONE? WORKING adjust the moisture for watering based off of watering dict
             #TODO testing, keep an eye on this
             
@@ -773,12 +784,11 @@ def water_plants():
     moistureReadings = {}
     moistureReadings = take_moisture(0)
     print(moistureReadings)
-    #DONE function to use moisture to water
     # this will pull the moisture based on each plant placement (see moisture function) potentially based on history and previous moisture measurements and will water based on time
     if not sensorsConnected:
         dbConnect("Watering plants")
         #testing code, assume sensors will be connected later
-        #if no moisture reading, run watering for 60 sec (for this dryrun water 6 units) #DONE ONE 
+        #if no moisture reading, run watering for 60 sec (for this dryrun water 6 units)
         for plant in plantSpotsTurnedOn:
             if moistureReadings.get(plant) == 0:
                 logging.debug(f"watering {plant} for 60 seconds as a new plant (0 moisture)")
@@ -805,13 +815,13 @@ VALUES ({plant[:-1]}, '{plant[-1]}', 0, 60)"""
                         timeToWater =  int(((moistureNeededPerPlant - moistureReadings.get(plant))/7)*10)
                         print(str(plant) + " time to water for " + str(timeToWater) + " seconds")
                         logging.debug(f"watering {plant} for {timeToWater} seconds")
+                        if timeToWater<1:timeToWater=1
                         sqlStatementWaterPlant = f"""
 INSERT INTO Plant_Working_Information (Placement, PlacementModifier, MoistureReading, WateringTimer)
-VALUES ({plant[:-1]}, '{plant[-1]}', 0, {timeToWater})"""
+VALUES ({plant[:-1]}, '{plant[-1]}', {int(moistureReadings.get(plant))}, {timeToWater})"""
                         sqlCursor.execute(sqlStatementWaterPlant)
                         conn.commit()
                         pass
-                #DONE water based off of pulled moisture vs predicted moisture
                 #TODO add some prediction(?) ability to adjust the 7 in the time to water formula to fine tune, this may only be needed for auto watering and auto moisture detection, and a manual adjustment when it comes to the non sensor workings
                 #print(plant + ' is moist')    
         dbDisconnect("Watering plants")

@@ -3301,3 +3301,93 @@ INFO:root:plantList.csv found
 2025-09-18 17:43:08,162 DEBUG db connection called - code - take moisture
 2025-09-18 17:43:08,163 DEBUG db connection called - code - Watering plants
 2025-09-18 17:43:08,163 DEBUG db disconnection called - code - Watering plants
+2025-09-23 12:00:46,867 INFO starting program
+2025-09-23 12:00:46,867 DEBUG db connection called - code - startup
+2025-09-23 12:00:46,868 INFO db connected to test.db
+2025-09-23 12:00:46,868 DEBUG db disconnection called - code - startup
+2025-09-23 12:00:46,868 INFO test.db found
+2025-09-23 12:00:46,868 DEBUG checking for tables
+2025-09-23 12:00:46,868 DEBUG db connection called - code - checking for tables
+2025-09-23 12:00:46,868 DEBUG Checking SELECT * FROM Plants
+2025-09-23 12:00:46,868 DEBUG Checking SELECT * FROM User_Settings
+2025-09-23 12:00:46,868 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-09-23 12:00:46,868 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-09-23 12:00:46,868 DEBUG All tables accounted for
+2025-09-23 12:00:46,868 DEBUG db disconnection called - code - checking for tables
+2025-09-23 12:00:46,868 DEBUG db connection called - code - pulling app settings
+2025-09-23 12:00:46,869 DEBUG db disconnection called - code - Pulling app settings
+2025-09-23 12:00:46,869 DEBUG db connection called - code - Pulling plant spots
+2025-09-23 12:00:46,869 DEBUG db disconnection called - code - Pulling plant spots
+2025-09-23 12:51:47,056 INFO starting program
+2025-09-23 12:51:47,056 DEBUG db connection called - code - startup
+2025-09-23 12:51:47,056 INFO db connected to test.db
+2025-09-23 12:51:47,056 DEBUG db disconnection called - code - startup
+2025-09-23 12:51:47,056 INFO test.db found
+2025-09-23 12:51:47,056 DEBUG checking for tables
+2025-09-23 12:51:47,056 DEBUG db connection called - code - checking for tables
+2025-09-23 12:51:47,056 DEBUG Checking SELECT * FROM Plants
+2025-09-23 12:51:47,057 DEBUG Checking SELECT * FROM User_Settings
+2025-09-23 12:51:47,057 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-09-23 12:51:47,057 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-09-23 12:51:47,057 DEBUG All tables accounted for
+2025-09-23 12:51:47,057 DEBUG db disconnection called - code - checking for tables
+2025-09-23 12:51:47,057 DEBUG db connection called - code - pulling app settings
+2025-09-23 12:51:47,057 DEBUG db disconnection called - code - Pulling app settings
+2025-09-23 12:51:47,057 DEBUG db connection called - code - Pulling plant spots
+2025-09-23 12:51:47,057 DEBUG db disconnection called - code - Pulling plant spots
+2025-09-23 12:52:10,733 DEBUG db connection called - code - take moisture
+2025-09-23 12:52:10,736 DEBUG db connection called - code - Watering plants
+2025-09-23 12:52:10,737 DEBUG watering 1a for 11 seconds
+2025-09-23 12:52:10,753 DEBUG watering 3b for 2 seconds
+2025-09-23 12:52:10,759 DEBUG watering 5a for 30 seconds
+2025-09-23 12:52:10,764 DEBUG db disconnection called - code - Watering plants
+2025-09-23 13:01:03,715 INFO starting program
+2025-09-23 13:01:03,715 DEBUG db connection called - code - startup
+2025-09-23 13:01:03,715 INFO db connected to test.db
+2025-09-23 13:01:03,715 DEBUG db disconnection called - code - startup
+2025-09-23 13:01:03,715 INFO test.db found
+2025-09-23 13:01:03,715 DEBUG checking for tables
+2025-09-23 13:01:03,715 DEBUG db connection called - code - checking for tables
+2025-09-23 13:01:03,715 DEBUG Checking SELECT * FROM Plants
+2025-09-23 13:01:03,716 DEBUG Checking SELECT * FROM User_Settings
+2025-09-23 13:01:03,716 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-09-23 13:01:03,716 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-09-23 13:01:03,716 DEBUG All tables accounted for
+2025-09-23 13:01:03,716 DEBUG db disconnection called - code - checking for tables
+2025-09-23 13:01:03,716 DEBUG db connection called - code - pulling app settings
+2025-09-23 13:01:03,716 DEBUG db disconnection called - code - Pulling app settings
+2025-09-23 13:01:03,716 DEBUG db connection called - code - Pulling plant spots
+2025-09-23 13:01:03,716 DEBUG db disconnection called - code - Pulling plant spots
+2025-09-23 13:01:14,491 DEBUG db connection called - code - take moisture
+2025-09-23 13:01:14,494 DEBUG db connection called - code - Watering plants
+2025-09-23 13:01:14,504 DEBUG watering 1a for 11 seconds
+2025-09-23 13:01:14,510 DEBUG watering 3b for 2 seconds
+2025-09-23 13:01:14,515 DEBUG watering 5a for 30 seconds
+2025-09-23 13:01:14,520 DEBUG db disconnection called - code - Watering plants
+2025-09-23 13:54:02,635 INFO starting program
+2025-09-23 13:54:02,635 DEBUG db connection called - code - startup
+2025-09-23 13:54:02,636 INFO db connected to test.db
+2025-09-23 13:54:02,636 DEBUG db disconnection called - code - startup
+2025-09-23 13:54:02,636 INFO test.db found
+2025-09-23 13:54:02,636 DEBUG checking for tables
+2025-09-23 13:54:02,636 DEBUG db connection called - code - checking for tables
+2025-09-23 13:54:02,636 DEBUG Checking SELECT * FROM Plants
+2025-09-23 13:54:02,636 DEBUG Checking SELECT * FROM User_Settings
+2025-09-23 13:54:02,636 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-09-23 13:54:02,636 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-09-23 13:54:02,636 DEBUG All tables accounted for
+2025-09-23 13:54:02,636 DEBUG db disconnection called - code - checking for tables
+2025-09-23 13:54:02,636 DEBUG db connection called - code - pulling app settings
+2025-09-23 13:54:02,636 DEBUG db disconnection called - code - Pulling app settings
+2025-09-23 13:54:02,636 DEBUG db connection called - code - Pulling plant spots
+2025-09-23 13:54:02,637 DEBUG db disconnection called - code - Pulling plant spots
+2025-09-23 13:54:23,103 DEBUG db connection called - code - take moisture
+2025-09-23 13:54:23,104 DEBUG 1a has been watered for 11 seconds, adjusting moisture
+2025-09-23 13:54:23,117 DEBUG 3b has been watered for 2 seconds, adjusting moisture
+2025-09-23 13:54:23,120 DEBUG 5a has been watered for 30 seconds, adjusting moisture
+2025-09-23 13:54:23,123 DEBUG db disconnection called - code - take moisture
+2025-09-23 13:55:04,208 DEBUG db connection called - code - take moisture
+2025-09-23 13:55:04,211 DEBUG db connection called - code - Watering plants
+2025-09-23 13:55:04,212 DEBUG watering 1a for 0 seconds
+2025-09-23 13:55:04,229 DEBUG watering 3b for 1 seconds
+2025-09-23 13:55:04,234 DEBUG db disconnection called - code - Watering plants
