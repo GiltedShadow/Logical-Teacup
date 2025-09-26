@@ -3623,3 +3623,21 @@ INFO:root:plantList.csv found
 2025-09-24 15:21:17,457 DEBUG 4a has been watered for 55 seconds, adjusting moisture
 2025-09-24 15:21:17,460 DEBUG 5a has been watered for 44 seconds, adjusting moisture
 2025-09-24 15:21:17,463 DEBUG db disconnection called - code - adjust moisture
+2025-09-24 17:20:00,147 INFO starting program
+2025-09-24 17:20:00,147 DEBUG db connection called - code - startup
+2025-09-24 17:20:00,147 INFO db connected to test.db
+2025-09-24 17:20:00,147 DEBUG db disconnection called - code - startup
+2025-09-24 17:20:00,147 INFO test.db found
+2025-09-24 17:20:00,147 DEBUG checking for tables
+2025-09-24 17:20:00,147 DEBUG db connection called - code - checking for tables
+2025-09-24 17:20:00,148 DEBUG Checking SELECT * FROM Plants
+2025-09-24 17:20:00,148 DEBUG Checking SELECT * FROM User_Settings
+2025-09-24 17:20:00,148 DEBUG Checking SELECT * FROM Plant_Working_Information
+2025-09-24 17:20:00,148 DEBUG Checking SELECT * FROM Air_Conditioning_Working_Information
+2025-09-24 17:20:00,148 DEBUG All tables accounted for
+2025-09-24 17:20:00,148 DEBUG db disconnection called - code - checking for tables
+2025-09-24 17:20:00,148 DEBUG db connection called - code - pulling app settings
+2025-09-24 17:20:00,148 DEBUG db disconnection called - code - Pulling app settings
+2025-09-24 17:20:00,148 DEBUG db connection called - code - Pulling plant spots
+2025-09-24 17:20:00,148 DEBUG db disconnection called - code - Pulling plant spots
+2025-09-24 17:20:05,204 DEBUG db connection called - code - pulling aircon values

@@ -120,7 +120,7 @@ introText = r"""
 #                      PK             PK       
 sqlStatementCreatePlantTable = """
 CREATE TABLE IF NOT EXISTS Plants(
-    PlantName VARCHAR NOT NULL,
+    PlantName VARCHAR NOT NULL,those and 
     Placement INTEGER NOT NULL,
     PlacementModifier VARCHAR NOT NULL,
     PotStyle VARCHAR,
@@ -166,6 +166,16 @@ CREATE TABLE IF NOT EXISTS Plant_Working_Information(
 );"""
 
 sqlStatementCreateAirconTable = """
+CREATE TABLE IF NOT EXISTS Air_Conditioning_Working_Information(
+    TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    TemperatureReading INTEGER DEFAULT 0,
+    HumidityReading INTEGER DEFAULT 0,
+    VentOpening INTEGER DEFAULT 0,
+    FanOneVent INTEGER DEFAULT 0,
+    FanTwo INTEGER DEFAULT 25
+);"""
+#adjusting to new requirements, storing original below for safe keeping
+"""
 CREATE TABLE IF NOT EXISTS Air_Conditioning_Working_Information(
     TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Type VARCHAR CHECK(Type in ("TEMPERATURE","HUMIDITY")) NOT NULL,
@@ -413,7 +423,6 @@ def get_plant_input(addOrAdj:str):
             
         plantResponses.append(response)
         x+=1
-    #print(plantResponses)
     return plantResponses
 
 def clear_table(tableToClear:str):
@@ -426,8 +435,6 @@ def get_and_check_plant_pk(): #get this integrated into adjust and delete
     response = input("Which plant to modify (select using spot+modifier like 1a or 12b)\n>>")
     if (response.lower()=='q' or response.lower()=='quit'):return [False]
     plantPlacement = [response[:-1], response[-1]]
-    # placementModifier = response[-1]
-    # placement = response[:-1]
     dbConnect("Adjusting plant + check -- " + plantPlacement[0] + plantPlacement[1])
     sqlCursor.execute(f"SELECT * FROM Plants WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'")
     values = sqlCursor.fetchall()
@@ -437,8 +444,7 @@ def get_and_check_plant_pk(): #get this integrated into adjust and delete
         return ['noListing']
     return plantPlacement
 
-def plant_settings(): #DONE add sql calls to plant settings
-#DONE add a check to make sure that plants are not added to spots above "spots avaialable" found in the user presets file
+def plant_settings(): 
     for plant in plantListList:
         print(plant)
     print("Do you want to add, adjust, or delete plants in the list?")
@@ -449,7 +455,6 @@ def plant_settings(): #DONE add sql calls to plant settings
             while(active):
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
-                #dbp.fancy_print_table('Plants')
                 dbp.disconnect_from_DB()
 
                 plantResponses = get_plant_input('add')
@@ -474,31 +479,14 @@ VALUES('{plantResponses[0]}', {plantResponses[1]}, '{plantResponses[2]}', '{plan
             #0'Plant Name', 1'Placement(int)', 2'Placement Modifier(a, b, c, etc)', 3'Pot Style', 4'Moisture(int)', 5'Temperature(int)', 6'Humidity(int)'
     
         case 'adjust'|'adj': 
-            #this function is dangerous to time management - this would likely be the sole cause to move to SQL for larger numbers of plants
             active=True
             while active:
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
-                #dbp.fancy_print_table('Plants')
                 dbp.disconnect_from_DB()
                 plantPlacement = get_and_check_plant_pk()
                 if plantPlacement == [False]:return
                 elif plantPlacement == ['noListing']:continue
-                # dbp.connect_to_DB(databaseFile)
-                # dbp.fancy_print_table('Plants')
-                # dbp.connect_to_DB()
-                
-                # response = input("Which plant to modify (select using spot+modifier like 1a or 12b)\n>>")
-                # if (response.lower()=='q' or response.lower()=='quit'):return
-                # placementModifier = response[-1]
-                # placement = response[:-1]
-                # dbConnect("Adjusting plant + check -- " + placement + placementModifier)
-                # sqlCursor.execute(f"SELECT * FROM Plants WHERE Placement={placement} AND PlacementModifier='{placementModifier}'")
-                # values = sqlCursor.fetchall()
-                # if values == []:
-                #     print("Please enter a real placement + modifier")
-                #     dbDisconnect("wrong adjustment request--" + placement + placementModifier)
-                #     continue
                 print("What do you want this plant changed to?")
                 plantResponses = get_plant_input('adj')
                 if plantResponses == [False]:
@@ -527,7 +515,6 @@ WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'
             while active:
                 dbp.connect_to_DB(databaseFile)
                 dbp.fancy_print_custom(sqlStatementSortedPlantsSelect, 'Plants')
-                #dbp.fancy_print_table('Plants')
                 dbp.disconnect_from_DB()
 
                 print("Delete the whole list or individual plants?")
@@ -544,17 +531,6 @@ WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'
                     plantPlacement = get_and_check_plant_pk()
                     if plantPlacement == [False]:return
                     elif plantPlacement == ['noListing']:continue
-                    # response = input("Which plant to modify (select using spot+modifier like 1a or 12b)\n>>")
-                    # if (response.lower()=='q' or response.lower()=='quit'):return
-                    # placementModifier = response[-1]
-                    # placement = response[:-1]
-                    # dbConnect("Deleting plant + check -- " + placement + placementModifier)
-                    # sqlCursor.execute(f"SELECT * FROM Plants WHERE Placement={placement} AND PlacementModifier='{placementModifier}'") #This is not returning an error value here - duh cause will return empty list, issue is present in adjust as well
-                    # values = sqlCursor.fetchall()
-                    # if values == []:
-                    #     print("Please enter a real placement + modifier")
-                    #     dbDisconnect("wrong adjustment request--" + placement + placementModifier)
-                    #     continue
                     sqlDeleteStatement = f"""
 DELETE FROM Plants
 WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'
@@ -563,21 +539,12 @@ WHERE Placement={plantPlacement[0]} AND PlacementModifier='{plantPlacement[1]}'
                     sqlCursor.execute(sqlDeleteStatement)
                     conn.commit()
                     dbDisconnect("Deleted item -- " + plantPlacement[0] + plantPlacement[1])   
-
                 else:
                     return                 
-
         case default:
             return
-    
 
-def pull_plant_list(): #DONE sql call to pull plant list
-    #Do we need this anymore? everyting can be directly modified with a sql statement
-    #No this is not needed
-    pass
-
-
-def pull_user_prefrences(): #DONE sql call to pull user settings
+def pull_user_prefrences(): #DONE sql caType VARCHAR CHECK(Type in ("TEMPERATURE","HUMIDITY")) NOT NULL,ll to pull user settings
     #   only pull pertanent information like the appSettings dict, maybe the name
     appSettings['Spots Available'] = 0
     appSettings['Ventilation'] = False
@@ -594,8 +561,6 @@ def pull_user_prefrences(): #DONE sql call to pull user settings
     else: appSettings['Watering Style']=False
     if settingsPull[0][3] == 1:appSettings['Ventilation']=True
     else: appSettings['Ventilation']=False
-    #print(settingsPull)
-    #print(appSettings['Filled Out'])
     dbDisconnect("Pulling app settings")
         
 ######################################################################################
@@ -664,13 +629,14 @@ def admin_log_in():
                 dbp.disconnect_from_DB()
             case "auto":
                 automation_testing()
+            case "aircon":
+                check_greenhouse_aircon_values()
             case default:
                 print("Exit admin?")
                 eResponse = input(">>").lower()
                 if ('y' in eResponse):
                     break
         
-#DONE add an automation script that runs watering and time passing
 def automation_testing():
     while True:
         print("=*="*25)
@@ -687,7 +653,6 @@ def automation_testing():
         take_moisture()
 
 def turn_on_off_spots():
-    #DONE pull plant spots from plant -CSV- SQL
     dbConnect("Pulling plant spots")
     sqlCursor.execute(sqlStatementPullPlantPlacements)
     placementData = sqlCursor.fetchall()
@@ -695,7 +660,6 @@ def turn_on_off_spots():
     plantSpotsTurnedOn = [] # this was causing a failure without global
     for place, modifier in placementData:
         plantSpotsTurnedOn.append(str(place) + modifier)
-        #print(str(place) + modifier)
     print("Spots detected -- " + str(plantSpotsTurnedOn))
     dbDisconnect("Pulling plant spots")
     pass
@@ -723,11 +687,7 @@ VALUES ({plant[:-1]}, '{plant[-1]}', {moistureToUpdate}, 0)
     dbDisconnect("passing 8 hours and losing moisture")
     
 def take_moisture(functionCall:int=1):
-    #DONE done? have take moisture only take moisture and not adjust anything
-    ### Should this be spit? 
-    # -take_moisture() pull moisture and pass it where needed
-    # -adjust_moisture() will adjust moisture based off of watering time or drop moisture by 8hrs
-    
+
     #functionCall will be what process this function will take #This might only be a thing for the testing and building of the logic
     #   0 will be no time passed, and will only pass the dict #DONE moving this to time_passes()
     #   1 will be a standard time pass and should reduce water
@@ -745,7 +705,7 @@ def take_moisture(functionCall:int=1):
         
         #if after a watering, add (random moiture 5-10) times however long the watering cycle is per 10 sec 
         #   so if watering for 30 secongs, (random5-10)x3
-        #DONE !!MAJOR!! figure out a way to pass the dict for immediate moisture readings while keeping the functionality of reducint moisture when run on its own 
+
         # To save space, if the place is removed from the turned on spots, it will be deleted from the db #TODO revist after physical trails
         dbConnect("take moisture") 
         for plant in plantSpotsTurnedOn:
@@ -789,8 +749,7 @@ def adjust_moisture():
 
     for plant in plantSpotsTurnedOn:
         #Had to adjust the sql below to order by RowID (secret column forced into being by no pimary key) as the time taken column is not capturing enough difference to 
-        sqlCursor.execute(f"SELECT WateringTimer FROM Plant_Working_Information WHERE Placement={plant[:-1]} and PlacementModifier='{plant[-1]}' ORDER BY RowID DESC") # it may be a good idea to figure out how to add both of these sql statements together to reduce db strain, probably by splitting the data below into separate dicts once functionality is confirmed
-        #splitting them will allow only one pass through each data item, combining them well put 2 numbers each [plant] pass so the for block post would need to be set up accordingly
+        sqlCursor.execute(f"SELECT WateringTimer FROM Plant_Working_Information WHERE Placement={plant[:-1]} and PlacementModifier='{plant[-1]}' ORDER BY RowID DESC") 
         wateringData = sqlCursor.fetchone()
 
         if wateringData != None:
@@ -828,7 +787,6 @@ def water_plants():
                 sqlStatementWateringFromZero = f"""
 INSERT INTO Plant_Working_Information (Placement, PlacementModifier, MoistureReading, WateringTimer)
 VALUES ({plant[:-1]}, '{plant[-1]}', 0, 60)"""
-                #print(sqlStatementWateringFromZero)
                 sqlCursor.execute(sqlStatementWateringFromZero)
                 conn.commit()
             else:
@@ -880,7 +838,52 @@ def adjust_water():
 ######################################################################################
 #Stage three - air control logic
 ######################################################################################
-#   
+"""
+TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+Type VARCHAR CHECK(Type in ("TEMPERATURE","HUMIDITY")) NOT NULL,
+ReadingOrAction VARCHAR CHECK(ReadingOrAction in ("READING","ACTION")) NOT NULL,
+Reading INTEGER,
+Action VARCHAR,
+PRIMARY KEY (TimeTaken, Type, ReadingOrAction)
+"""
+#Reworking this to match with new ideas and work - using RowID as PK
+"""
+TimeTaken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+TemperatureReading INTEGER DEFAULT 0,
+HumidityReading INTEGER DEFAULT 0,
+VentOpening INTEGER DEFAULT 0,
+FanOneVent INTEGER DEFAULT 0,
+FanTwo INTEGER DEFAULT 25
+"""
+
+#Without inputs, theres likely no way to automate
+#   figure out later how to setup automation with inputs
+
+#what do we need to do here?
+# take air temp
+# take air humidity
+#   based off of those and plant requirements/ user settings open window
+#   based off of those and plant requirements/ user settings adjust fan
+#   fan should be running at nearly all times at least 25%
+#       maybe 2 fans?
+
+greenhouseValues = {'Temperature':0, 'Humidity':0, 'Vent Opening':0, 'Vent Fan PWM':0, 'Circ Fan Two PWM':25}
+#                       [0][1]          [0][2]          [0][3]              [0][4]          [0][5]
+def check_greenhouse_aircon_values():
+    dbConnect("pulling aircon values")
+    sqlStatementPullAirConValues = "SELECT * FROM Air_Conditioning_Working_Information ORDER BY RowID DESC"
+    sqlCursor.execute(sqlStatementPullAirConValues)
+    airconData = sqlCursor.fetchone()
+    if airconData != None:
+        greenhouseValues['Temperature'] = airconData[0][1]
+        greenhouseValues['Humidity'] = airconData[0][2]
+        greenhouseValues['Vent Opening'] = airconData[0][3]
+        greenhouseValues['Vent Fan PWM'] = airconData[0][4]
+        greenhouseValues['Circ Fan Two PWM'] = airconData[0][5]
+        logging.debug(f"aircon settings pulled from saved settings, temp {greenhouseValues.get('Temperature')}, humid  {greenhouseValues.get('Humidity')}, vent {greenhouseValues.get('Vent Opening')}, vent fan {greenhouseValues.get('Vent Fan PWM')}, circ fan {greenhouseValues.get('Circ Fan Two PWM')}")
+    print(airconData)
+
+
 ######################################################################################
 #Stage three - air control logic
 ######################################################################################
