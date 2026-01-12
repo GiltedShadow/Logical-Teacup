@@ -883,6 +883,8 @@ def check_greenhouse_aircon_values():
         logging.debug(f"aircon settings pulled from saved settings, temp {greenhouseValues.get('Temperature')}, humid  {greenhouseValues.get('Humidity')}, vent {greenhouseValues.get('Vent Opening')}, vent fan {greenhouseValues.get('Vent Fan PWM')}, circ fan {greenhouseValues.get('Circ Fan Two PWM')}")
     print(airconData)
 
+#TODO get new temps/humids from user
+#TODO use current set temps/humids to adjust fans/window
 
 ######################################################################################
 #Stage three - air control logic
